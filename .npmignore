@@ -1,0 +1,6 @@
+src/
+types/
+**/*.test.js
+webpack.config.js
+.eslintrc
+.babelrc

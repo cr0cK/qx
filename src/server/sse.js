@@ -10,27 +10,30 @@ import isObject from 'lodash/isObject';
 
 import bus from './bus';
 
-const reqProperties = [
-  'baseUrl',
-  'body',
-  'cookies',
-  'fresh',
-  'hostname',
-  'ip',
-  'ips',
-  'method',
-  'originalUrl',
-  'params',
-  'path',
-  'protocol',
-  'query',
-  'route',
-  'secure',
-  'signedCookies',
-  'stale',
-  'subdomains',
-  'xhr',
-];
+
+let tickInterval;
+
+// const reqProperties = [
+//   'baseUrl',
+//   'body',
+//   'cookies',
+//   'fresh',
+//   'hostname',
+//   'ip',
+//   'ips',
+//   'method',
+//   'originalUrl',
+//   'params',
+//   'path',
+//   'protocol',
+//   'query',
+//   'route',
+//   'secure',
+//   'signedCookies',
+//   'stale',
+//   'subdomains',
+//   'xhr',
+// ];
 
 /**
  * Write SSE events to the response.
@@ -43,24 +46,29 @@ function writeRes(res: $Response, event: string, data: Object | null) {
 
   res.write(`event: ${event}\n`);
   res.write(`data: ${resData}\n\n`);
+
+  // fix ERR_INCOMPLETE_CHUNKED_ENCODING errors
+  res.flush();
+}
+
+/**
+ * Stop to emit 'ticks'.
+ */
+function stopTick() {
+  if (tickInterval) {
+    clearInterval(tickInterval);
+  }
 }
 
 /**
  * Emit 'ticks' to keep the connexion alive.
  */
 function startTick(res) {
-  return setInterval(() => {
+  stopTick();
+
+  tickInterval = setInterval(() => {
     writeRes(res, 'tick', null);
   }, 2000);
-}
-
-/**
- * Stop to emit 'ticks'.
- */
-function stopTick(tickInterval) {
-  if (tickInterval) {
-    clearInterval(tickInterval);
-  }
 }
 
 /**
@@ -76,25 +84,17 @@ function sseServer(req: $Request, res: $Response) {
     Connection: 'keep-alive',
   });
 
-  const tickInterval = startTick(res);
+  startTick(res);
 
-  bus.on('call', ({ request, response }) => {
-    // format request displayed data
-    const reqData = reqProperties.reduce((acc, property) => {
-      return {
-        ...acc,
-        [property]: request[property] || '',
-      };
-    }, {});
-
-    // format response displayed data
-    const resData = {
-      body: response.body,
-    };
-
+  bus.on('call', ({ interceptReq, interceptResBody }) => {
     const data = {
-      request: reqData,
-      response: resData,
+      request: {
+        method: interceptReq.method,
+        originalUrl: interceptReq.originalUrl,
+      },
+      response: {
+        body: interceptResBody,
+      },
     };
 
     writeRes(res, 'call', data);

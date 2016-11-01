@@ -10,6 +10,7 @@ env:
   mocha: true
 
 rules:
+  import/no-extraneous-dependencies: 0
   no-underscore-dangle: 0
   global-require: 0
   prefer-arrow-callback: 0

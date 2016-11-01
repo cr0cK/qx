@@ -8,7 +8,7 @@
     </ul>
     <ul>
       <li v-for="call in calls">
-        {{ call.request.method }} - {{ call.request.originalUrl }} => {{ call.response.body }}
+        {{ call.request.method }} - {{ call.request.originalUrl }} => {{ call.response.body | truncate }}
       </li>
     </ul>
   </div>
@@ -26,14 +26,18 @@ export default {
   },
   mounted: function() {
     const evtSource = new EventSource('/qx/sse');
-    evtSource.addEventListener('tick', () => {
-      console.log('tick!');
-    });
     evtSource.addEventListener('call', this.pushCall);
+  },
+  filters: {
+    truncate: function (value, nbChars = 30) {
+      if (!value) {
+        return '';
+      }
+      return value.toString().slice(0, nbChars) + '...';
+    }
   },
   methods: {
     pushCall: function(event) {
-      console.log('event?', event);
       try {
         const data = JSON.parse(event.data);
         this.calls.push(data);
