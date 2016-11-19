@@ -12,14 +12,13 @@ function getOutput() {
       filename: 'bundle.js',
     } :
     {
-      path: path.join(currentPath, './src/client/dist'),
-      publicPath: 'http://localhost:8080/dist/',
+      publicPath: 'http://localhost:8080/client',
       filename: 'bundle.js',
     };
 }
 
 module.exports = {
-  entry: path.join(currentPath, './src/client/main.js'),
+  entry: path.join(currentPath, './src/client/index.js'),
   output: getOutput(),
   module: {
     rules: [

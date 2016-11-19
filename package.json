@@ -4,13 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "clean:dist": "rm -rf dist && mkdir dist",
-    "dev:client": "webpack-dev-server --inline --hot",
+    "clean:dist": "rm -rf dist && mkdir dist/server -p && mkdir dist/client -p",
+    "copy:assets": "cp node_modules/vue-material/dist/vue-material.css dist/client/vue-material.css",
+    "build:server": "babel --ignore '*.spec.js' --ignore 'src/client' -d dist src",
     "build:client": "NODE_ENV=production webpack --progress --hide-modules",
-    "build:server": "NODE_ENV=production npm run clean:dist && babel --ignore '*.spec.js' --ignore 'src/client' -d dist src",
-    "build:all": "NODE_ENV=production npm run build:server && npm run build:client",
+    "build:all": "NODE_ENV=production npm run clean:dist && npm run build:server && npm run build:client && npm run copy:assets",
+    "watch:client": "webpack-dev-server --inline --hot",
     "prepublish": "npm run clean:dist && npm run build:all",
-    "lint": "eslint .",
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +22,9 @@
   "license": "ISC",
   "dependencies": {
     "default": "^0.1.1",
-    "vue": "^2.0.3"
+    "lodash": "^4.17.2",
+    "vue": "^2.0.3",
+    "vue-material": "^0.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.3.17",
@@ -37,14 +40,16 @@
     "eslint": "^3.8.1",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-babel": "^3.3.0",
-    "eslint-plugin-flowtype": "^2.20.0",
+    "eslint-plugin-flowtype": "^2.25.0",
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
+    "http-proxy-middleware": "^0.17.2",
     "vue-loader": "^9.7.0",
     "webpack": "^2.1.0-beta.25",
-    "webpack-dev-server": "^2.1.0-beta.0"
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-dev-server": "^1.16.2"
   }
 }

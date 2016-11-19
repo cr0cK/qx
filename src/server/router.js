@@ -5,7 +5,7 @@ import express from 'express';
 
 import bus from './bus';
 import sseServer from './sse';
-import clientMiddleware from './clientMiddleware';
+import client from './client';
 
 
 /**
@@ -13,7 +13,7 @@ import clientMiddleware from './clientMiddleware';
  */
 const logResponseBody = (config: QXConfig) => (req, res, next) => {
   // intercept of not according to the filter function
-  if (config.filter !== undefined && !config.filter(req)) {
+  if (config.filter !== undefined && !config.filterUrls(req)) {
     next();
     return;
   }
@@ -33,11 +33,21 @@ const logResponseBody = (config: QXConfig) => (req, res, next) => {
       chunks.push(chunk);
     }
 
+    // compute the duration of the request
+    const requestDuration = (Date.now() - req.qxStart) / 1000;
+
     try {
       const responseBody = Buffer.concat(chunks).toString('utf8');
+
       bus.emit('call', {
-        interceptReq: req,
-        interceptResBody: responseBody,
+        request: {
+          method: req.method,
+          originalUrl: req.originalUrl,
+        },
+        response: {
+          body: responseBody,
+        },
+        requestDuration,
       });
     } catch (err) {
       // logging('Response chunks are not a buffer, skipping', req.originalUrl);
@@ -56,10 +66,28 @@ const logResponseBody = (config: QXConfig) => (req, res, next) => {
 function qxRouter(options: QXConfig) {
   const router = express.Router();    // eslint-disable-line new-cap
 
-  // serve the bundle client
-  const clientBundlePath = path.join(
-    process.cwd(), 'node_modules', '@crock', 'qx', 'dist', 'client');
-  router.use(`${options.endpoint}/dist`, express.static(clientBundlePath));
+  // save the start of the request
+  router.use((req, res, next) => {
+    req.qxStart = Date.now();         // eslint-disable-line no-param-reassign
+    next();
+  });
+
+  // if development, proxy an endpoint to the live bundle provided by QX's
+  // webpack-dev-server
+  if (options.development) {
+    const proxy = require('http-proxy-middleware');
+
+    const endpoint = `${options.endpoint}/webpack`;
+
+    router.use(endpoint, proxy({
+      target: options.liveBundlePath,
+      pathRewrite: { [endpoint]: '' },
+    }));
+  }
+
+  // serve assets
+  const assetsPath = path.join(__dirname, '..', '..', 'dist', 'client');
+  router.use(`${options.endpoint}/assets`, express.static(assetsPath));
 
   // send SSE events of data received from the bus
   router.use(`${options.endpoint}/sse`, sseServer);
@@ -68,7 +96,7 @@ function qxRouter(options: QXConfig) {
   router.use(logResponseBody(options));
 
   // serve a client webapp plugged to the SSE server to view queries and responses
-  router.use(options.endpoint, clientMiddleware(options));
+  router.use(options.endpoint, client(options));
 
   return router;
 }

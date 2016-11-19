@@ -1,11 +1,5 @@
 // @flow
 
-import type {
-  $Request,
-  $Response,
-  // NextFunction,
-} from 'express';
-
 import isObject from 'lodash/isObject';
 
 import bus from './bus';
@@ -38,7 +32,7 @@ let tickInterval;
 /**
  * Write SSE events to the response.
  */
-function writeRes(res: $Response, event: string, data: Object | null) {
+function writeRes(res: Object, event: string, data: Object | null) {
   let resData = '';
   if (isObject(data)) {
     resData = JSON.stringify(data);
@@ -72,11 +66,15 @@ function startTick(res) {
 }
 
 /**
+ * Write eventData on the response.
+ */
+const sendSSEEvent = res => eventData => writeRes(res, 'call', eventData);
+
+/**
  * SSE server used to send SSE events to the webapp
  * from events listened from the bus.
  */
-function sseServer(req: $Request, res: $Response) {
-  // $FlowFixMe
+function sseServer(req: Object, res: Object) {
   res.writeHead(200, {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'text/event-stream',
@@ -86,19 +84,9 @@ function sseServer(req: $Request, res: $Response) {
 
   startTick(res);
 
-  bus.on('call', ({ interceptReq, interceptResBody }) => {
-    const data = {
-      request: {
-        method: interceptReq.method,
-        originalUrl: interceptReq.originalUrl,
-      },
-      response: {
-        body: interceptResBody,
-      },
-    };
-
-    writeRes(res, 'call', data);
-  });
+  // remove the listener to avoid to bind several times the same handler.
+  bus.removeListener('call', sendSSEEvent);
+  bus.on('call', sendSSEEvent(res));
 
   // stop tick interval when the request is closed
   req.on('close', () => stopTick(tickInterval));
