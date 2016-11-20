@@ -5,12 +5,3 @@
     </md-toolbar>
   </md-whiteframe>
 </template>
-
-<style>
-  html,
-  body {
-    height: 100%;
-    font-family: "Roboto-Regular", Helvetica, Arial, sans-serif;
-    font-size: 1em;
-  }
-</style>

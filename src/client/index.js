@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import VueMaterial from 'vue-material';
 
-import Header from './components/header.vue';
-import Events from './components/events.vue';
-import App from './App.vue';
+import App from './components/App.vue';
+import store from './store';
 
 
 Vue.use(VueMaterial);
@@ -13,10 +12,8 @@ Vue.material.theme.register('default', {
   accent: 'pink',
 });
 
-Vue.component('Header', Header);
-Vue.component('Events', Events);
-
 new Vue({   // eslint-disable-line no-new
+  store,
   el: '#app',
   render: h => h(App),
 });

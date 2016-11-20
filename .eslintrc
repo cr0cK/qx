@@ -13,6 +13,7 @@ env:
 rules:
   flowtype/define-flow-type: 1
   import/no-extraneous-dependencies: 0
+  import/prefer-default-export: 0
   no-underscore-dangle: 0
   global-require: 0
   prefer-arrow-callback: 0
