@@ -9,20 +9,30 @@ import client from './client';
 
 
 /**
- * Hijack response writes to emit an event with the body of the response.
+ * Return the list of profiles that matches for the request object.
  */
-const logResponseBody = (config: QXConfig) => (req, res, next) => {
+export const selectProfiles =
+(configProfiles: Array<ProfileDefinition>, req: Object): Array<ProfileDefinition> => {
   let profiles: Array<ProfileDefinition> = [];
 
-  // if no profiles has been defined, intercept all request in the default one
-  if (!config.profiles.length) {
+  // found profiles matching the request
+  profiles = configProfiles.reduce((acc, profil) => (
+    profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
+  ), []);
+
+  // if no profiles match, intercept all request in the default profil
+  if (!profiles.length) {
     profiles.push({ name: 'default' });
-  } else {
-    // found profiles matching the request
-    profiles = config.profiles.reduce((acc, profil) => (
-      profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
-    ), []);
   }
+
+  return profiles;
+};
+
+/**
+ * Hijack response writes to emit an event with the body of the response.
+ */
+const logResponseBody = (config: QXConfig) => (req, res, next): void => {
+  const profiles = selectProfiles(config.profiles, req);
 
   // if no profiles found, don't intercept the request
   if (!profiles.length) {
@@ -76,7 +86,7 @@ const logResponseBody = (config: QXConfig) => (req, res, next) => {
  * QX router.
  * Define routes to the different components.
  */
-function qxRouter(options: QXConfig) {
+const qxRouter = (options: QXConfig): Object => {
   const router = express.Router();    // eslint-disable-line new-cap
 
   // save the start of the request
@@ -112,6 +122,6 @@ function qxRouter(options: QXConfig) {
   router.use(options.endpoint, client(options));
 
   return router;
-}
+};
 
 export default qxRouter;

@@ -35,7 +35,7 @@ const qxRouter = qx({
   profiles: [{
     name: 'Shop',
     color: '#fff200',
-    urlsFilter: (req) => /^\/api\/shop/.test(req.originalUrl),
+    urlsFilter: (req) => /^\/api\/shop\//.test(req.originalUrl),
     // ...,
   }],
 });
