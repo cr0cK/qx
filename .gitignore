@@ -1,4 +1,4 @@
 dist
-src/client/assets
 node_modules
+coverage
 npm-debug.log
