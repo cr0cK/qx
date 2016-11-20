@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean:dist": "rm -rf dist && mkdir dist/server -p && mkdir dist/client -p",
-    "copy:assets": "cp node_modules/vue-material/dist/vue-material.css dist/client/vue-material.css",
+    "copy:assets": "./bin/copy-assets",
     "build:server": "babel --ignore '*.spec.js' --ignore 'src/client' -d dist src",
     "build:client": "NODE_ENV=production webpack --progress --hide-modules",
     "build:all": "NODE_ENV=production npm run clean:dist && npm run build:server && npm run build:client && npm run copy:assets",

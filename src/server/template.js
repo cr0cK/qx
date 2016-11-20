@@ -15,10 +15,14 @@ export default (options: QXConfig = {}) => (
     <meta charset="utf-8">
     <title>QX Client</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="${options.endpoint}/assets/vue-material.css">
-    <link rel="shortcut icon" href="${options.endpoint}/assets/favicon.ico">
+    <style>
+      @font-face {
+        font-family: "Roboto-Regular";
+        src: url("${options.endpoint}/assets/fonts/Roboto-Regular.ttf");
+      }
+    </style>
+    <link rel="stylesheet" href="${options.endpoint}/assets/styles/vue-material.css">
+    <link rel="shortcut icon" href="${options.endpoint}/assets/styles/favicon.ico">
   </head>
   <body>
     <div id="app"></div>

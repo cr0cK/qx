@@ -109,7 +109,7 @@ const qxRouter = (options: QXConfig): Object => {
   }
 
   // serve assets
-  const assetsPath = path.join(__dirname, '..', '..', 'dist', 'client');
+  const assetsPath = path.join(__dirname, '..', '..', 'dist', 'client', 'assets');
   router.use(`${options.endpoint}/assets`, express.static(assetsPath));
 
   // send SSE events of data received from the bus

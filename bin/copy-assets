@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Copy assets in the dist directory.
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+mkdir ${DIR}/dist/client/assets/styles -p
+
+cp ${DIR}/node_modules/vue-material/dist/vue-material.css ${DIR}/dist/client/assets/styles
+cp ${DIR}/src/assets/* ${DIR}/dist/client/assets -R
