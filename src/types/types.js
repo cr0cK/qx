@@ -4,8 +4,8 @@
 
 type ProfileDefinition = {
   name: string,
-  color: string,
-  urlsPattern: (url: Object) => boolean,
+  color?: string,
+  urlsFilter?: (url: Object) => boolean,
 };
 
 type QXConfig = {

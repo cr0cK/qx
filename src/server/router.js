@@ -12,8 +12,20 @@ import client from './client';
  * Hijack response writes to emit an event with the body of the response.
  */
 const logResponseBody = (config: QXConfig) => (req, res, next) => {
-  // intercept of not according to the filter function
-  if (config.filter !== undefined && !config.filterUrls(req)) {
+  let profiles: Array<ProfileDefinition> = [];
+
+  // if no profiles has been defined, intercept all request in the default one
+  if (!config.profiles.length) {
+    profiles.push({ name: 'default' });
+  } else {
+    // found profiles matching the request
+    profiles = config.profiles.reduce((acc, profil) => (
+      profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
+    ), []);
+  }
+
+  // if no profiles found, don't intercept the request
+  if (!profiles.length) {
     next();
     return;
   }
@@ -47,6 +59,7 @@ const logResponseBody = (config: QXConfig) => (req, res, next) => {
         response: {
           body: responseBody,
         },
+        profiles,
         requestDuration,
       });
     } catch (err) {

@@ -10,8 +10,8 @@ const defaultOptions: QXConfig = {
   development: false,
   // path of the live bundle if development is true
   liveBundlePath: 'http://localhost:8080/client/bundle.js',
-  // filter urls intercepted by QX
-  filterUrls: () => true,
+  // profiles definitions
+  profiles: [],
 };
 
 /**

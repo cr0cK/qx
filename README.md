@@ -32,12 +32,12 @@ Different profil can be configured according to the intercepted url. For example
 ```js
 const qxRouter = qx({
   endpoint: '/qx',
-  profiles: {
+  profiles: [{
     name: 'Shop',
     color: '#fff200',
-    urlsPattern: (req) => /^\/api\/shop/.test(req.originalUrl),
+    urlsFilter: (req) => /^\/api\/shop/.test(req.originalUrl),
     // ...,
-  },
+  }],
 });
 ```
 
