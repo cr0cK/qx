@@ -4,6 +4,7 @@ extends: "airbnb"
 parser: "babel-eslint"
 
 plugins:
+  - "html"
   - "babel"
   - "flowtype"
 
