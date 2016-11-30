@@ -1,7 +1,9 @@
 <template>
-  <md-whiteframe md-elevation="3" class="header">
-    <md-toolbar>
-      <div class="md-title">QX</div>
-    </md-toolbar>
-  </md-whiteframe>
+  <header>QX</header>
 </template>
+
+<style lang="less" scoped>
+  header {
+    border: 1px solid red;
+  }
+</style>

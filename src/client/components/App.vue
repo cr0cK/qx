@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-md-theme="'default'">
+  <div id="app">
     <Top></Top>
     <Events />
   </div>

@@ -2,7 +2,7 @@
   "name": "@crock/qx",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/server/index.js",
   "scripts": {
     "clean:dist": "rm -rf dist && mkdir dist/server -p && mkdir dist/client -p",
     "copy:assets": "./bin/copy-assets",
@@ -50,6 +50,8 @@
     "file-loader": "^0.9.0",
     "http-proxy-middleware": "^0.17.2",
     "jest": "^17.0.3",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
     "vue-loader": "^9.7.0",
     "webpack": "^2.1.0-beta.25",
     "webpack-dev-middleware": "^1.8.4",

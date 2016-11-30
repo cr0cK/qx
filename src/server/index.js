@@ -1,6 +1,6 @@
 // @flow
 
-import router from './server/router';
+import router from './router';
 
 
 const defaultOptions: QXConfig = {

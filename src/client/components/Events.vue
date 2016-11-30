@@ -1,27 +1,28 @@
 <template>
   <div>
-    <md-list v-for="call in calls">
-      <md-list-item>
+    <div>LOL</div>
+    <div>
+      <li v-for="call in calls">
         <span>{{ call.request.method }}</span>
         <span>{{ call.request.originalUrl }}</span>
         <span>{{ call.request.requestDuration }}</span>
         <span>{{ call.response.body | truncate }}</span>
-      </md-list-item>
-    </md-list>
+      </li>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'app',
-  data: function() {
+  data: function () {
     return {
       msg: 'Welcome to Your Vue.js App !!',
       calls: [],
       errors: [],
     };
   },
-  mounted: function() {
+  mounted: function () {
     const evtSource = new EventSource('/qx/sse');
     evtSource.addEventListener('call', this.pushCall);
   },
