@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <Top></Top>
+    <Top />
     <Events />
   </div>
 </template>
 
 <script>
-import Top from './Top.vue';
-import Events from './Events.vue';
+import Top from './Top';
+import Events from './Events';
 
 export default {
   name: 'App',

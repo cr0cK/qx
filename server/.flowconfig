@@ -5,6 +5,6 @@
 [include]
 
 [libs]
-./src/types
+../types
 
 [options]
