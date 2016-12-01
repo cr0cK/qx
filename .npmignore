@@ -1,6 +1,4 @@
-src/
-types/
-**/*.test.js
-webpack.config.js
+server/
+client/
 .eslintrc
 .babelrc

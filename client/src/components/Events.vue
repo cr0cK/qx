@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>LOL</div>
+    <div>Events:</div>
     <div>
       <li v-for="call in calls">
         <span>{{ call.request.method }}</span>
@@ -13,29 +13,29 @@
 </template>
 
 <script>
+/* globals EventSource: true */
+
 export default {
   name: 'app',
-  data: function () {
-    return {
-      msg: 'Welcome to Your Vue.js App !!',
-      calls: [],
-      errors: [],
-    };
-  },
+  data: () => ({
+    msg: 'Welcome to Your Vue.js App !!',
+    calls: [],
+    errors: [],
+  }),
   mounted: function () {
     const evtSource = new EventSource('/qx/sse');
     evtSource.addEventListener('call', this.pushCall);
   },
   filters: {
-    truncate: function (value, nbChars = 30) {
+    truncate: (value, nbChars = 30) => {
       if (!value) {
         return '';
       }
-      return value.toString().slice(0, nbChars) + '...';
-    }
+      return `${value.toString().slice(0, nbChars)}...`;
+    },
   },
   methods: {
-    pushCall: function(event) {
+    pushCall: function (event) {
       try {
         const data = JSON.parse(event.data);
         this.calls.push(data);
@@ -53,3 +53,4 @@ li {
   display: block;
 }
 </style>
+

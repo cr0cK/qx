@@ -1,0 +1,22 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+echo -e "** Clean dist **"
+
+rm -rf ${DIR}/dist
+rm -rf ${DIR}/client/dist
+rm -rf ${DIR}/server/dist
+mkdir ${DIR}/dist/server -p
+mkdir ${DIR}/dist/client -p
+
+echo -e "\n** Build server **"
+
+cd ${DIR}/server && npm run build
+
+echo -e "\n** Build client **"
+
+cd ${DIR}/client && npm run build
+mv ${DIR}/client/dist/* ${DIR}/dist/client
+
+echo -e "\nDone!"

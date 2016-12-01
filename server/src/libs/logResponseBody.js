@@ -1,11 +1,4 @@
-// @flow
-
-import path from 'path';
-import express from 'express';
-
 import bus from './bus';
-import sseServer from './sse';
-import client from './client';
 
 
 /**
@@ -82,46 +75,4 @@ const logResponseBody = (config: QXConfig) => (req, res, next): void => {
   next();
 };
 
-/**
- * QX router.
- * Define routes to the different components.
- */
-const qxRouter = (options: QXConfig): Object => {
-  const router = express.Router();    // eslint-disable-line new-cap
-
-  // save the start of the request
-  router.use((req, res, next) => {
-    req.qxStart = Date.now();         // eslint-disable-line no-param-reassign
-    next();
-  });
-
-  // if development, proxy an endpoint to the live bundle provided by QX's
-  // webpack-dev-server
-  if (options.development) {
-    const proxy = require('http-proxy-middleware');
-
-    const endpoint = `${options.endpoint}/webpack`;
-
-    router.use(endpoint, proxy({
-      target: options.liveBundlePath,
-      pathRewrite: { [endpoint]: '' },
-    }));
-  }
-
-  // serve assets
-  const assetsPath = path.join(__dirname, '..', '..', 'dist', 'client', 'assets');
-  router.use(`${options.endpoint}/assets`, express.static(assetsPath));
-
-  // send SSE events of data received from the bus
-  router.use(`${options.endpoint}/sse`, sseServer);
-
-  // intercept the response to emit an event on the bus
-  router.use(logResponseBody(options));
-
-  // serve a client webapp plugged to the SSE server to view queries and responses
-  router.use(options.endpoint, client(options));
-
-  return router;
-};
-
-export default qxRouter;
+export default logResponseBody;
