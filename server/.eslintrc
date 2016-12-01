@@ -1,0 +1,14 @@
+---
+"extends": "airbnb-base"
+
+parser: "babel-eslint"
+
+env:
+  mocha: true
+
+plugins:
+  - "babel"
+  - "flowtype"
+
+rules:
+  flowtype/define-flow-type: 1
