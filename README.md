@@ -34,8 +34,13 @@ const qxRouter = qx({
   endpoint: '/qx',
   profiles: [{
     name: 'Shop',
-    color: '#fff200',
+    color: 'red',
     urlsFilter: (req) => /^\/api\/shop\//.test(req.originalUrl),
+    // ...,
+  }, {
+    name: 'Account',
+    color: 'yellow',
+    urlsFilter: (req) => /^\/api\/account\//.test(req.originalUrl),
     // ...,
   }],
 });
@@ -61,6 +66,6 @@ const qxRouter = qx({
 - Start webpack-dev-server from QX:
 
 ```bash
-cd qx
-npm run watch:client
+cd qx/client
+npm run dev
 ```

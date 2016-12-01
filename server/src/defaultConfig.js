@@ -1,4 +1,6 @@
-const defaultConfig: QXConfig = {
+// @flow
+
+const defaultConfig: Config = {
   // if true, proxy the client path to liveBundlePath
   development: false,
   // path of the live bundle if development is true

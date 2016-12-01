@@ -68,7 +68,7 @@ function startTick(res) {
 /**
  * Write eventData on the response.
  */
-const sendSSEEvent = res => eventData => writeRes(res, 'call', eventData);
+const sendSSEEvent = res => eventData => writeRes(res, 'request', eventData);
 
 /**
  * SSE server used to send SSE events to the webapp
@@ -85,8 +85,8 @@ function sseServer(req: Object, res: Object) {
   startTick(res);
 
   // remove the listener to avoid to bind several times the same handler.
-  bus.removeListener('call', sendSSEEvent);
-  bus.on('call', sendSSEEvent(res));
+  bus.removeListener('request', sendSSEEvent);
+  bus.on('request', sendSSEEvent(res));
 
   // stop tick interval when the request is closed
   req.on('close', () => stopTick(tickInterval));
