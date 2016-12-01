@@ -4,6 +4,7 @@
   "description": "Queries eXplorer",
   "main": "dist/server/index.js",
   "scripts": {
+    "build": "./bin/build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
