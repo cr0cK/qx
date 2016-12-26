@@ -1,6 +1,6 @@
 /* global expect: true */
 
-import { selectProfiles } from './router';
+import { selectProfiles } from '../router';
 
 describe('router', () => {
   describe('selectProfiles', () => {

@@ -4,7 +4,7 @@
 
     <ul>
       <router-link tag="li" :to="{ name: 'requests' }">
-        <i class="fa fa-list fa-2x"></i>
+        <i class="fa fa-exchange fa-2x"></i>
       </router-link>
 
       <router-link tag="li" :to="{ name: 'settings' }">
@@ -32,7 +32,6 @@ export default {
 <style lang="less" scoped>
 nav {
   background: #342C3E;
-  height: 100%;
   width: 75px;
 
   header {

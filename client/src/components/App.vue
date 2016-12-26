@@ -1,9 +1,9 @@
 <template>
   <main class="page">
-    <navigation />
-    <center>
+    <Navigation />
+    <Center>
       <router-view></router-view>
-    </center>
+    </Center>
   </div>
 </template>
 
@@ -31,9 +31,10 @@ export default {
 
 html,
 body {
-  height: 100%;
   font-family: "DroidSans", sans-serif;
   font-size: 1em;
+  height: 100%;
+  overflow: hidden;
 }
 
 main.page {

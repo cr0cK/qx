@@ -16,7 +16,7 @@ export const selectProfiles =
     profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
   ), []);
 
-  // if no profiles match, intercept all request in the default profil
+  // if no profiles match, intercept all requests in the default profil
   if (!profiles.length) {
     profiles.push({ name: 'default' });
   }
@@ -27,7 +27,7 @@ export const selectProfiles =
 /**
  * Hijack response writes to emit an event with the body of the response.
  */
-export default (config: Config) => (req: Object, res: Object, next: Function): void => {
+export default (db: DB, config: Config) => (req: Object, res: Object, next: Function): void => {
   const profiles = selectProfiles(config.profiles, req);
 
   // if no profiles found, don't intercept the request
@@ -59,23 +59,33 @@ export default (config: Config) => (req: Object, res: Object, next: Function): v
     const requestDuration = (Date.now() - req.qxStart) / 1000;
 
     try {
-      const responseBody = Buffer.concat(chunks).toString('utf8');
+      const allBuffers = Buffer.concat(chunks);
+      const responseBody = allBuffers.toString('utf8');
 
       const requestData: RequestDataEvent = {
         request: {
           method: req.method,
+          statusCode: req.statusCode,
           originalUrl: req.originalUrl,
           duration: requestDuration,
         },
         response: {
           body: responseBody,
+          statusCode: res.statusCode,
+          length: allBuffers.length,    // FIXME
         },
         profiles,
       };
 
+      // save request in the db
+      db.get('requests')
+        .push(requestData)
+        .value();
+
+      // emit the request via the bus
       bus.emit('request', requestData);
     } catch (err) {
-      log('Response chunks are not a buffer, skipping', req.originalUrl);
+      log('An error occurred', err.stack);
     }
 
     oldEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params

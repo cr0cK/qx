@@ -2,6 +2,8 @@
 
 // @flow
 
+// Config
+
 type ProfileDefinition = {
   name: string,
   color?: string,
@@ -14,6 +16,8 @@ type Config = {
   profiles: Array<ProfileDefinition>,
 };
 
+// Events
+
 type RequestDataEvent = {
   request: {
     method: string,
@@ -24,4 +28,5 @@ type RequestDataEvent = {
     body: string,
   },
   profiles: Array<ProfileDefinition>,
-}
+};
+

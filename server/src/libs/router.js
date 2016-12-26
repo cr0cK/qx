@@ -5,6 +5,7 @@ import path from 'path';
 import express from 'express';
 
 import sseServer from './sse';
+import api from './api';
 import sendEvents from './sendEvents';
 
 
@@ -39,7 +40,7 @@ const client = (config: Config) => (req: Object, res: Object) => {
  * QX router.
  * Define routes to the different components.
  */
-const qxRouter = (config: Config): Object => {
+const qxRouter = (db: DB, config: Config): Object => {
   const router = express.Router();    // eslint-disable-line new-cap
 
   // save the start of the request
@@ -68,8 +69,11 @@ const qxRouter = (config: Config): Object => {
   // send SSE events of data received from the bus
   router.use('/qx/sse', sseServer);
 
+  // expose an API for the client
+  router.use('/qx/api', api(db));
+
   // send events on the bus
-  router.use(sendEvents(config));
+  router.use(sendEvents(db, config));
 
   // serve a client webapp plugged to the SSE server to view queries and responses
   router.use('/qx', client(config));

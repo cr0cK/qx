@@ -21,6 +21,7 @@ module.exports = {
   // add your custom rules here
   'rules': {
     'object-shorthand': 0,
+    'arrow-body-style': 0,
     'func-names': 0,
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {

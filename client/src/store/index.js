@@ -6,7 +6,7 @@ import Vuex from 'vuex';
 // import cart from './modules/cart';
 // import products from './modules/products';
 
-import explorer from './modules/explorer';
+import requestsList from './modules/requestsList';
 
 
 Vue.use(Vuex);
@@ -17,7 +17,7 @@ export default new Vuex.Store({
   // actions,
   // getters,
   modules: {
-    explorer,
+    requestsList,
   },
   strict: debug,
   plugins: debug ? [] : [],

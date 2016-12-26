@@ -1,19 +1,22 @@
 <template>
-  <section>
-    BLABLA
-  </section>
+  <div>
+    {{ request }}
+  </div>
 </template>
 
 <script>
 export default {
   name: 'RequestDetails',
+
   components: {
+  },
+
+  props: {
+    request: Object,
   },
 };
 </script>
 
 <style lang="less">
-section {
-  // border: 1px solid red;
-}
+
 </style>

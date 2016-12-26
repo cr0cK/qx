@@ -1,7 +1,7 @@
 <template>
-  <div class="table-row">
+  <div class="table-row" @click="onClickOnRow(row)">
 
-    <template v-for="text4 in row">
+    <template v-for="text4 in getStackedRow(row)">
       <div class="wrapper text-4">
 
         <template v-for="text2 in text4">
@@ -28,18 +28,47 @@ type Cell = {
   label: string,
 };
 
+type Row = Array<string>;
+
+const stackValues = (values) => {
+  let temp = [];
+  return values.reduce((acc, value, i) => {
+    temp.push(value);
+
+    if (temp.length === 2 || i === values.length - 1) {
+      acc.push(temp);
+      temp = [];
+    }
+
+    return acc;
+  }, []);
+};
+
+const megaStackValues = row => stackValues(stackValues(row));
+
 export default {
   name: 'ListRow',
 
   props: {
     row: Array,
+    onClickOnRow: {
+      type: Function,
+      default() {},
+    },
   },
 
   methods: {
     /**
-     * Show the label
+     * Stack values for the nested loops for responsive table.
      */
-    showLabel: function (text: String | Cell) {
+    getStackedRow(row: Row) {
+      return megaStackValues(row);
+    },
+
+    /**
+     * Show the label of the cell.
+     */
+    showLabel(text: String | Cell) {
       try {
         return isObject(text) ?
           text.label :
@@ -163,6 +192,10 @@ export default {
   border-bottom: 1px solid #e0e0e0;
   border-collapse: collapse;
   padding: 6px 0px;
+
+  &:hover {
+    background: #efefef;
+  }
 }
 
 .table-row.header {

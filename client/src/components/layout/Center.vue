@@ -12,7 +12,8 @@ export default {
 
 <style lang="less">
 .center {
-  flex-grow: 1;
-  padding: 1em 1.5em;
+  position: relative;
+  padding: 1em;
+  overflow-y: auto
 }
 </style>
