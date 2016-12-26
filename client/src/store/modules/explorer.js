@@ -1,29 +1,37 @@
-/* eslint no-param-reassign: 0 */
-/* eslint no-plusplus: 0 */
+// @flow
 
-export const INCREMENT = 'explorer/INCREMENT';
-export const UNCREMENT = 'explorer/UNCREMENT';
+export const SAVE_REQUEST = 'explorer/SAVE_REQUEST';
+// export const UNCREMENT = 'explorer/UNCREMENT';
 
-const initialState = {
-  count: 0,
+type State = {
+  requests: Array<RequestDataEvent>,
+};
+
+const initialState: State = {
+  requests: [],
 };
 
 const getters = {
+  allRequests: (state: State) => state.requests,
 };
 
 const actions = {
 };
 
 const mutations = {
-  [INCREMENT](state) {
-    state.count++;
-  },
-  [UNCREMENT](state) {
-    state.count--;
+  [SAVE_REQUEST](
+    state: State,
+    requestData: RequestDataEvent,
+  ) {
+    state.requests = [    // eslint-disable-line
+      ...state.requests,
+      requestData,
+    ];
   },
 };
 
 export default {
+  namespaced: true,
   state: initialState,
   getters,
   actions,

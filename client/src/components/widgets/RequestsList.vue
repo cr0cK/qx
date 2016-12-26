@@ -6,20 +6,14 @@
 /* globals EventSource: true */
 
 import List from '../ui/List';
+import { SAVE_REQUEST } from '../../store/modules/explorer';
+
 
 export default {
   name: 'RequestsList',
 
-  rows: [],
-
   components: {
     List,
-  },
-
-  data() {
-    return {
-      requests: [],
-    };
   },
 
   /**
@@ -44,15 +38,15 @@ export default {
 
   computed: {
     getRequests() {
-      const rows = this.requests.reduce((acc, request) => {
+      const allRequests = this.$store.getters.allRequests;
+
+      const rows = allRequests.reduce((acc, request) => {
         acc.push([
           request.request.method,
           request.request.originalUrl,
         ]);
         return acc;
-      }, this.rows);
-
-      this.rows = [];
+      }, []);
 
       return {
         columns: [{
@@ -71,11 +65,11 @@ export default {
      */
     pushRequest(event) {
       try {
-        const data: RequestDataEvent = JSON.parse(event.data);
-        this.requests.push(data);
+        const requestData: RequestDataEvent = JSON.parse(event.data);
+        this.$store.commit(SAVE_REQUEST, requestData);
       } catch (err) {
         // console.error(String(err), err.stack);
-        this.errors.push(String(err));
+        this.errors.push(String(err));    // FIXME
       }
     },
   },
