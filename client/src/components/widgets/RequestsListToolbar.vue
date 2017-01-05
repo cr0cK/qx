@@ -1,5 +1,6 @@
 <template>
   <div class="toolbar">
+    <SmallButton icon="filter" :onClickHandler="toggleDefaultProfiles" />
     <SmallButton icon="trash" :onClickHandler="clearList" />
   </div>
 </template>
@@ -7,6 +8,7 @@
 <script>
 import {
   CLEAR_LIST,
+  TOGGLE_ENABLED_DEFAULT_PROFILE,
 } from '../../store/modules/requestsList';
 
 import SmallButton from '../ui/Button/SmallButton';
@@ -23,7 +25,15 @@ export default {
      * Clear the list.
      */
     clearList() {
-      this.$store.dispatch(CLEAR_LIST);
+      this.$store.commit(CLEAR_LIST);
+    },
+
+    /**
+     * TODO: Filter between profiles.
+     * For now, just hide requests of "default" profile.
+     */
+    toggleDefaultProfiles() {
+      this.$store.commit(TOGGLE_ENABLED_DEFAULT_PROFILE);
     },
   },
 };

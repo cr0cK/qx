@@ -9,8 +9,8 @@
         </th>
       </tr>
 
-      <tr v-for="row in values.rows">
-        <td v-for="cell in row">
+      <tr :style="row.style" v-for="row in values.rows">
+        <td v-for="cell in row.values">
           <div @click="callOnClickOnRow(row)">
             {{ cell }}
           </div>
@@ -40,15 +40,7 @@ export default {
      * Call `onClickOnRow` handler with values and columns.
      */
     callOnClickOnRow(row) {
-      const formattedValues = row.reduce((acc, value, i) => {
-        const columnLabel = this.values.columns[i].label;
-        return {
-          ...acc,
-          [columnLabel]: value,
-        };
-      }, {});
-
-      this.onClickOnRow(formattedValues);
+      this.onClickOnRow(row);
     },
   },
 };

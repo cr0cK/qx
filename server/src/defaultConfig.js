@@ -8,7 +8,10 @@ const defaultConfig: Config = {
   // path of the live bundle if development is true
   liveBundlePath: 'http://localhost:8080/app.js',
   // profiles definitions
-  profiles: [],
+  profiles: [{
+    name: 'default',
+    color: 'white',
+  }],
   // QX db to store queries
   dbFilePath: path.join(process.cwd(), 'qx_db.json'),
 };

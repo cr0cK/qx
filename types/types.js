@@ -8,6 +8,7 @@ type ProfileDefinition = {
   name: string,
   color?: string,
   urlsFilter?: (url: Object) => boolean,
+  enabled?: boolean,
 };
 
 type Config = {
@@ -26,6 +27,8 @@ type RequestDataEvent = {
   },
   response: {
     body: string,
+    statusCode: string,
+    length: number,
   },
   profiles: Array<ProfileDefinition>,
 };

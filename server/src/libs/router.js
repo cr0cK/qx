@@ -70,7 +70,7 @@ const qxRouter = (db: DB, config: Config): Object => {
   router.use('/qx/sse', sseServer);
 
   // expose an API for the client
-  router.use('/qx/api', api(db));
+  router.use('/qx/api', api(db, config));
 
   // send events on the bus
   router.use(sendEvents(db, config));

@@ -11,6 +11,10 @@ const qxRouter = function qxRouter(config: Object = defaultConfig) {
   const finalConfig = {
     ...defaultConfig,
     ...config,
+    profiles: [
+      ...defaultConfig.profiles,
+      ...config.profiles,
+    ],
   };
 
   // setup DB

@@ -27,6 +27,8 @@ import {
   SAVE_REQUESTS,
   SELECT_REQUEST,
   UNSELECT_REQUEST,
+
+  GET_PROFILES,
 } from '../../store/modules/requestsList';
 
 const evtSource = new EventSource('/qx/sse');
@@ -58,6 +60,12 @@ export default {
     };
   },
 
+  created() {
+    if (!this.$store.getters.getProfiles.length) {
+      this.$store.dispatch(GET_PROFILES);
+    }
+  },
+
   /**
    * Bind handler when activating the component.
    * And load requests if the list is empty.
@@ -65,7 +73,7 @@ export default {
   activated() {
     evtSource.addEventListener('request', this.pushRequest);
 
-    if (!this.$store.getters.allRequests.length) {
+    if (!this.$store.getters.rawRequests.length) {
       this.$store.dispatch(GET_SAVED_REQUESTS);
     }
   },
@@ -91,23 +99,19 @@ export default {
   },
 
   computed: {
-    /**
-     * Format requests from the store.
-     */
     formatRequests() {
-      const allRequests = this.$store.getters.allRequests;
+      const formattedRequests = this.$store.getters.formattedRequests;
 
-      const rows = allRequests.reduce((acc, request, i) => {
-        acc.push([
-          i,
-          request.request.method,
-          request.response.statusCode,
-          request.request.originalUrl,
-          request.request.duration,
-          request.response.length,
-        ]);
-        return acc;
-      }, []);
+      const rows = formattedRequests.reverse().map((request) => {
+        const color = request.latestProfile.color || 'white';
+
+        return {
+          ...request,
+          style: {
+            'border-left': `4px solid ${color}`,
+          },
+        };
+      });
 
       return {
         columns: this.columns,
@@ -131,7 +135,7 @@ export default {
     pushRequest(event) {
       try {
         const requestData: RequestDataEvent = JSON.parse(event.data);
-        this.$store.dispatch(SAVE_REQUESTS, [requestData]);
+        this.$store.commit(SAVE_REQUESTS, [requestData]);
       } catch (err) {
         error(String(err));
       }
@@ -142,7 +146,7 @@ export default {
      * + bind a close handler in the window object.
      */
     selectRequest(request) {
-      this.$store.dispatch(SELECT_REQUEST, request);
+      this.$store.commit(SELECT_REQUEST, request);
       window.addEventListener('keyup', this.closeSideBar);
     },
 
@@ -152,7 +156,7 @@ export default {
      */
     closeSideBar(e) {
       if (e.key === 'Escape' || e.type === 'click') {
-        this.$store.dispatch(UNSELECT_REQUEST);
+        this.$store.commit(UNSELECT_REQUEST);
         window.removeEventListener('keyup', this.closeSideBar);
       }
     },
