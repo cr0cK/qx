@@ -4,11 +4,11 @@
 
 import axios from 'axios';
 
-export const GET_SAVED_REQUESTS = 'explorer/GET_SAVED_REQUESTS';
-export const SAVE_REQUESTS = 'explorer/SAVE_REQUESTS';
-export const SELECT_REQUEST = 'explorer/SELECT_REQUEST';
-export const UNSELECT_REQUEST = 'explorer/UNSELECT_REQUEST';
-export const CLEAR_LIST = 'explorer/CLEAR_LIST';
+export const GET_SAVED_REQUESTS = 'requestsList/GET_SAVED_REQUESTS';
+export const SAVE_REQUESTS = 'requestsList/SAVE_REQUESTS';
+export const SELECT_REQUEST = 'requestsList/SELECT_REQUEST';
+export const UNSELECT_REQUEST = 'requestsList/UNSELECT_REQUEST';
+export const CLEAR_LIST = 'requestsList/CLEAR_LIST';
 
 
 type State = {
