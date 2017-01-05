@@ -22,15 +22,15 @@ export default {
 
 <style lang="less" scoped>
 nav {
-  background: #342C3E;
+  background: #095f68;
   width: 75px;
 
   header {
     color: white;
     text-align: center;
     font-size: 1.8em;
-    font-weight: 300;
-    line-height: 1.4em;
+    font-weight: 600;
+    line-height: 1em;
     margin: 0.5em 0 1em 0;
   }
 
@@ -40,7 +40,8 @@ nav {
     margin: 0;
     padding: 0;
     text-align: center;
-    color: #d3c9e0;
+    color: white;
+    color: #c1f8f5;
 
     li {
       list-style: none;

@@ -1,7 +1,7 @@
 <template>
-  <h3>
+  <h2>
     <slot></slot>
-  </h3>
+  </h2>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-h3 {
-  margin-top: 0;
+h2 {
+  margin: 0 0 2em 0;
 }
 </style>

@@ -1,23 +1,30 @@
 <template>
   <div class="list">
-    <template v-for="row in [values.columns]">
-      <Row class="header" :row="row" />
-    </template>
+    <table>
+      <tr>
+        <th v-for="column in values.columns">
+          <div>
+            {{ column.label }}
+          </div>
+        </th>
+      </tr>
 
-    <template v-for="row in values.rows">
-      <Row class="body" :row="row" :onClickOnRow="callOnClickOnRow" />
-    </template>
+      <tr v-for="row in values.rows">
+        <td v-for="cell in row">
+          <div @click="callOnClickOnRow(row)">
+            {{ cell }}
+          </div>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
-import Row from './Row';
-
 export default {
   name: 'List',
 
   components: {
-    Row,
   },
 
   props: {
@@ -48,5 +55,31 @@ export default {
 </script>
 
 <style lang="less">
+table {
+  width: 100%;
+
+  td {
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background: #f4f4f4;
+  }
+
+  tr {
+    &:hover {
+      background: #c1f8f5;
+      cursor: pointer;
+    }
+
+    th, td {
+      text-align: left;
+
+      div {
+        padding: 1em;
+      }
+    }
+  }
+}
 </style>
 
