@@ -7,8 +7,13 @@
         <template v-for="text2 in text4">
           <div class="wrapper text-2">
 
-            <template v-for="text in text2">
-              <div class="text">{{ showLabel(text) }}</div>
+            <template v-for="cell in text2">
+              <div
+                :style="getStyle(cell)"
+                class="text"
+              >
+                {{ cell.label }}
+              </div>
             </template>
 
           </div>
@@ -21,11 +26,9 @@
 </template>
 
 <script>
-import isObject from 'lodash/isObject';
-import error from '../../../helpers/log';
-
 type Cell = {
   label: string,
+  styles?: Object,
 };
 
 type Row = Array<string>;
@@ -66,17 +69,14 @@ export default {
     },
 
     /**
-     * Show the label of the cell.
+     * Return the style of the cell.
      */
-    showLabel(text: String | Cell) {
-      try {
-        return isObject(text) ?
-          text.label :
-          text;
-      } catch (err) {
-        error(err);
-        return 'Err';
+    getStyle(cell: Cell | void) {
+      if (!cell.style) {
+        return {};
       }
+
+      return cell.style;
     },
   },
 };
@@ -112,8 +112,16 @@ export default {
 }
 
 // Text cells and wrappers: grow equally when there is extra space
-.text-4, .text-2, .text {
+// .text-4, .text-2, .text {
+//   flex-grow: 1;
+// }
+
+.text-4, .text {
   flex-grow: 1;
+}
+
+.text-2 {
+  border: 1px solid red;
 }
 
 // Text cells: truncate and show ellipsis when not enough space
@@ -122,6 +130,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   padding-right: 20px;
+  // border: 1px solid silver;
 }
 
 // Fix the minimum width of the leaf level cells

@@ -43,16 +43,39 @@ export default {
   data() {
     return {
       columns: [{
+        style: {
+          width: '30px',
+          // 'flex-grow': 0,
+        },
         label: '#',
       }, {
+        style: {
+          width: '60px',
+          // 'flex-grow': 0,
+        },
         label: 'Method',
       }, {
+        style: {
+          width: '60px',
+          // 'flex-grow': 0,
+        },
         label: 'Status',
       }, {
+        style: {
+          // 'flex-grow': 1,
+        },
         label: 'URL',
       }, {
+        style: {
+          width: '80px',
+          // 'flex-grow': 0,
+        },
         label: 'Duration',
       }, {
+        style: {
+          width: '80px',
+          // 'flex-grow': 0,
+        },
         label: 'Length',
       }],
     };
