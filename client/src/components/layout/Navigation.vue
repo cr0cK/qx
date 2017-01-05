@@ -15,17 +15,8 @@
 </template>
 
 <script>
-// import Navigation from './Navigation';
-// import RequestDetails from '../others//RequestDetails';
-
-// <li title="Requests list"><i class="fa fa-list fa-2x"></i></li>
-// <li title="Settings"><i class="fa fa-cog fa-2x"></i></li>
-
 export default {
   name: 'Navigation',
-  components: {
-    // RequestDetails,
-  },
 };
 </script>
 

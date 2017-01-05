@@ -65,8 +65,4 @@ export default {
   top: 1em;
   right: 1em;
 }
-
-h3 {
-  margin-top: 0;
-}
 </style>
