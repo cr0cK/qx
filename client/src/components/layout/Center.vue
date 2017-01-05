@@ -14,6 +14,7 @@ export default {
 .center {
   position: relative;
   padding: 1em;
-  overflow-y: auto
+  width: 100%;
+  overflow-y: auto;
 }
 </style>
