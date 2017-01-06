@@ -1,21 +1,15 @@
 // @flow
 
-import defaultConfig from './defaultConfig';
+import setupConfig from './libs/setupConfig';
 import router from './libs/router';
 import setupDB from './libs/db';
+
 
 /**
  * Return QX router.
  */
-const qxRouter = function qxRouter(config: Object = defaultConfig) {
-  const finalConfig = {
-    ...defaultConfig,
-    ...config,
-    profiles: [
-      ...defaultConfig.profiles,
-      ...config.profiles,
-    ],
-  };
+const qxRouter = function qxRouter(config: Config) {
+  const finalConfig = setupConfig(config);
 
   // setup DB
   const db = setupDB(finalConfig.dbFilePath);
