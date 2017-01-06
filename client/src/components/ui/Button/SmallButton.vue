@@ -1,5 +1,5 @@
 <template>
-  <button @click="onClickHandler">
+  <button @click="onClickHandler" :title="title">
     <i :class="getClasses"></i>
   </button>
 </template>
@@ -10,6 +10,7 @@ export default {
 
   props: {
     icon: String,
+    title: String,
     onClickHandler: Function,
   },
 
