@@ -6,9 +6,7 @@
     />
 
     <SideBar :visible="isSideBarVisible" :closeHandler="closeSideBar">
-      <RequestDetails
-        :request="selectedRequest"
-      />
+      <RequestDetails :requestUuid="selectedRequest" />
     </SideBar>
   </div>
 </template>
@@ -146,7 +144,7 @@ export default {
      * + bind a close handler in the window object.
      */
     selectRequest(request) {
-      this.$store.commit(SELECT_REQUEST, request);
+      this.$store.commit(SELECT_REQUEST, request.uuid);
       window.addEventListener('keyup', this.closeSideBar);
     },
 

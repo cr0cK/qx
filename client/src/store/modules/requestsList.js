@@ -8,6 +8,7 @@ import { error } from '../../helpers/log';
 
 
 export const GET_SAVED_REQUESTS = 'requestsList/GET_SAVED_REQUESTS';
+export const GET_REQUEST_DETAILS = 'requestsList/GET_REQUEST_DETAILS';
 export const SAVE_REQUESTS = 'requestsList/SAVE_REQUESTS';
 export const SELECT_REQUEST = 'requestsList/SELECT_REQUEST';
 export const UNSELECT_REQUEST = 'requestsList/UNSELECT_REQUEST';
@@ -20,13 +21,15 @@ export const TOGGLE_ENABLED_DEFAULT_PROFILE =
 
 type State = {
   requests: Array<RequestDataEvent>,
-  selectedRequest?: RequestDataEvent,
+  selectedRequest?: string,
+  requestDetails?: Object,
   profiles: Array<ProfileDefinition>,
 };
 
 const initialState: State = {
   requests: [],
   selectedRequest: undefined,
+  requestDetails: undefined,
   profiles: [],
 };
 
@@ -67,6 +70,8 @@ const getters = {
   },
 
   selectedRequest: (state: State) => state.selectedRequest,
+
+  requestDetails: (state: State) => state.requestDetails,
 };
 
 const actions: VueXActions = {
@@ -96,6 +101,15 @@ const actions: VueXActions = {
       .then(() => commit(DELETE_REQUESTS))
       .catch(error);
   },
+
+  /**
+   * Get the details of a request.
+   */
+  [GET_REQUEST_DETAILS]({ commit }, requestUuid) {
+    axios.get(`/qx/api/requests/${requestUuid}`)
+      .then(response => commit('SET_REQUEST_DETAILS', response.data))
+      .catch(error);
+  },
 };
 
 const mutations: VueXMutations = {
@@ -111,9 +125,9 @@ const mutations: VueXMutations = {
 
   [SELECT_REQUEST](
     state: State,
-    requestData: RequestDataEvent,
+    uuid: string,
   ) {
-    state.selectedRequest = requestData;
+    state.selectedRequest = uuid;
   },
 
   [UNSELECT_REQUEST](state: State) {
@@ -122,6 +136,10 @@ const mutations: VueXMutations = {
 
   [DELETE_REQUESTS](state: State) {
     state.requests = [];
+  },
+
+  SET_REQUEST_DETAILS(state: State, requestDetails) {
+    state.requestDetails = requestDetails;
   },
 
   /** Profiles **/
