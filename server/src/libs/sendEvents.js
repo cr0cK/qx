@@ -58,35 +58,42 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     // compute the duration of the request
     const requestDuration = (Date.now() - req.qxStart) / 1000;
 
+    let responseBody;
     try {
       const allBuffers = Buffer.concat(chunks);
-      const responseBody = allBuffers.toString('utf8');
-
-      const requestData: RequestDataEvent = {
-        request: {
-          method: req.method,
-          statusCode: req.statusCode,
-          originalUrl: req.originalUrl,
-          duration: requestDuration,
-        },
-        response: {
-          body: responseBody,
-          statusCode: res.statusCode,
-          length: allBuffers.length,    // FIXME
-        },
-        profiles,
-      };
-
-      // save request in the db
-      db.get('requests')
-        .push(requestData)
-        .value();
-
-      // emit the request via the bus
-      bus.emit('request', requestData);
+      responseBody = allBuffers.toString('utf8');
     } catch (err) {
-      log('An error occurred', err.stack);
+      // case of one chunck is not binary data
+      try {
+        responseBody = chunks.join('');
+      } catch (err2) {
+        log('Cant parse the response body chunks.');
+        responseBody = '';
+      }
     }
+
+    const requestData: RequestDataEvent = {
+      request: {
+        method: req.method,
+        statusCode: req.statusCode,
+        originalUrl: req.originalUrl,
+        duration: requestDuration,
+      },
+      response: {
+        body: responseBody,
+        statusCode: res.statusCode,
+        length: responseBody.length,
+      },
+      profiles,
+    };
+
+    // save request in the db
+    db.get('requests')
+      .push(requestData)
+      .value();
+
+    // emit the request via the bus
+    bus.emit('request', requestData);
 
     oldEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
   };
