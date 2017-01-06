@@ -23,11 +23,13 @@ type RequestDataEvent = {
   uuid: string,
   date: string,
   request: {
+    headers: Object,
     method: string,
     originalUrl: string,
     duration: number,
   },
   response: {
+    headers: Object,
     body: string,
     statusCode: string,
     length: number,

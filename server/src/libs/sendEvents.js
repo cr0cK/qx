@@ -1,10 +1,79 @@
 // @flow
 
 import uuid from 'node-uuid';
+import zlib from 'zlib';
 
 import bus from './bus';
 import log from './logger';
 
+
+/**
+ * Decode the response.
+ *  - concat buffers
+ *  - unzip if the content is zipped
+ *  - decode to string
+ *  - encode to JSON if the content-type is JSON
+ */
+const decodeResponse = (responseHeaders, chunks) => {
+  const concatBuffers = localChunks => (
+    new Promise((resolve, reject) => {
+      try {
+        const allBuffers = Buffer.concat(localChunks);
+        resolve(allBuffers);
+      } catch (err) {
+        reject(err);
+      }
+    })
+  );
+
+  const unzip = (buffer) => {
+    const isGzipEncoded = responseHeaders['content-encoding'] === 'gzip';
+
+    if (!isGzipEncoded) {
+      return Promise.resolve(buffer);
+    }
+
+    return new Promise((resolve, reject) => {
+      zlib.unzip(buffer, (err, decodedBuffer) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(decodedBuffer);
+      });
+    });
+  };
+
+  const decodeToString = buffer => (
+    new Promise((resolve, reject) => {
+      try {
+        resolve(buffer.toString('utf8'));
+      } catch (err) {
+        reject(err);
+      }
+    })
+  );
+
+  const encodeToJSON = (string) => {
+    const isJSON = /application\/json/.test(responseHeaders['content-type']);
+
+    if (!isJSON) {
+      return Promise.resolve(string);
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        resolve(JSON.parse(string));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
+  return concatBuffers(chunks)
+    .then(unzip)
+    .then(decodeToString)
+    .then(encodeToJSON);
+};
 
 /**
  * Return the list of profiles that matches for the request object.
@@ -60,46 +129,41 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     // compute the duration of the request
     const requestDuration = (Date.now() - req.qxStart) / 1000;
 
-    let responseBody;
-    try {
-      const allBuffers = Buffer.concat(chunks);
-      responseBody = allBuffers.toString('utf8');
-    } catch (err) {
-      // case of one chunck is not binary data
-      try {
-        responseBody = chunks.join('');
-      } catch (err2) {
-        log('Cant parse the response body chunks.');
-        responseBody = '';
-      }
-    }
+    const responseHeaders = res.header()._headers;   // eslint-disable-line no-underscore-dangle
 
-    const requestData: RequestDataEvent = {
-      uuid: uuid.v4(),
-      date: String(new Date()),
-      request: {
-        method: req.method,
-        statusCode: req.statusCode,
-        originalUrl: req.originalUrl,
-        duration: requestDuration,
-      },
-      response: {
-        body: responseBody,
-        statusCode: res.statusCode,
-        length: responseBody.length,
-      },
-      profiles,
-    };
+    decodeResponse(responseHeaders, chunks)
+      .then((responseBody) => {
+        const requestData: RequestDataEvent = {
+          uuid: uuid.v4(),
+          date: String(new Date()),
+          request: {
+            headers: req.headers,
+            method: req.method,
+            originalUrl: req.originalUrl,
+            duration: requestDuration,
+          },
+          response: {
+            headers: responseHeaders,   // eslint-disable-line no-underscore-dangle
+            body: responseBody,
+            statusCode: res.statusCode,
+            length: responseBody.length,
+          },
+          profiles,
+        };
 
-    // save request in the db
-    db.get('requests')
-      .push(requestData)
-      .value();
+        // save request in the db
+        db.get('requests')
+          .push(requestData)
+          .value();
 
-    // emit the request via the bus
-    bus.emit('request', requestData);
+        // emit the request via the bus
+        bus.emit('request', requestData);
 
-    oldEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
+        oldEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
+      })
+      .catch((err) => {
+        log.error('Cant decode the response body.', err);
+      });
   };
 
   next();
