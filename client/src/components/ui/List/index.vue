@@ -9,7 +9,7 @@
         </th>
       </tr>
 
-      <tr :style="row.style" v-for="row in values.rows">
+      <tr :style="row.style" v-for="row in values.rows" :key="row.values[0]">
         <td v-for="cell in row.values">
           <div @click="callOnClickOnRow(row)">
             {{ cell }}
