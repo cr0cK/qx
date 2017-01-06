@@ -20,6 +20,8 @@ type Config = {
 // Events
 
 type RequestDataEvent = {
+  uuid: string,
+  date: string,
   request: {
     method: string,
     originalUrl: string,
@@ -33,3 +35,13 @@ type RequestDataEvent = {
   profiles: Array<ProfileDefinition>,
 };
 
+// UI
+
+type RequestRow = {
+  uuid: string,
+  date: string,
+  values: Array<string | number>,
+  profiles: Array<ProfileDefinition>,
+  latestProfile: ProfileDefinition,
+  style?: Object,
+}

@@ -100,7 +100,7 @@ export default {
 
   computed: {
     formatRequests() {
-      const formattedRequests = this.$store.getters.formattedRequests;
+      const formattedRequests: Array<RequestRow> = this.$store.getters.formattedRequests;
 
       const rows = formattedRequests.reverse().map((request) => {
         const color = request.latestProfile.color || 'white';
@@ -108,7 +108,7 @@ export default {
         return {
           ...request,
           style: {
-            'border-left': `4px solid ${color}`,
+            'border-left': `5px solid ${color}`,
           },
         };
       });

@@ -1,5 +1,7 @@
 // @flow
 
+import uuid from 'node-uuid';
+
 import bus from './bus';
 import log from './logger';
 
@@ -73,6 +75,8 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     }
 
     const requestData: RequestDataEvent = {
+      uuid: uuid.v4(),
+      date: String(new Date()),
       request: {
         method: req.method,
         statusCode: req.statusCode,

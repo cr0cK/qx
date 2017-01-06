@@ -11,7 +11,7 @@ export const GET_SAVED_REQUESTS = 'requestsList/GET_SAVED_REQUESTS';
 export const SAVE_REQUESTS = 'requestsList/SAVE_REQUESTS';
 export const SELECT_REQUEST = 'requestsList/SELECT_REQUEST';
 export const UNSELECT_REQUEST = 'requestsList/UNSELECT_REQUEST';
-export const CLEAR_LIST = 'requestsList/CLEAR_LIST';
+export const DELETE_REQUESTS = 'requestsList/DELETE_REQUESTS';
 
 export const GET_PROFILES = 'requestsList/GET_PROFILES';
 export const TOGGLE_ENABLED_DEFAULT_PROFILE =
@@ -35,7 +35,7 @@ const getters = {
 
   rawRequests: (state: State): Array<RequestDataEvent> => state.requests,
 
-  formattedRequests: (state: State) => {   // eslint-disable-line no-shadow
+  formattedRequests: (state: State): Array<RequestRow> => {   // eslint-disable-line no-shadow
     const enabledProfiles = state.profiles
       .filter(profile => profile.enabled)
       .map(profile => profile.name);
@@ -49,6 +49,8 @@ const getters = {
       }
 
       acc.push({
+        uuid: request.uuid,
+        date: request.date,
         values: [
           i,
           request.request.method,
@@ -68,15 +70,30 @@ const getters = {
 };
 
 const actions: VueXActions = {
+  /**
+   * Retrieve the profiles from the config and set them in the store.
+   */
   [GET_PROFILES]({ commit }) {
     axios.get('/qx/api/config')
       .then(response => commit('SET_PROFILES', response.data.profiles))
       .catch(error);
   },
 
+  /**
+   * Retrieve all requests and set them in the store.
+   */
   [GET_SAVED_REQUESTS]({ commit }) {
     axios.get('/qx/api/requests')
       .then(response => commit(SAVE_REQUESTS, response.data))
+      .catch(error);
+  },
+
+  /**
+   * Delete all requests and clean the the store.
+   */
+  [DELETE_REQUESTS]({ commit }) {
+    axios.delete('/qx/api/requests')
+      .then(() => commit(DELETE_REQUESTS))
       .catch(error);
   },
 };
@@ -103,7 +120,7 @@ const mutations: VueXMutations = {
     state.selectedRequest = undefined;
   },
 
-  [CLEAR_LIST](state: State) {
+  [DELETE_REQUESTS](state: State) {
     state.requests = [];
   },
 

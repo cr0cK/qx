@@ -1,13 +1,13 @@
 <template>
   <div class="toolbar">
-    <SmallButton icon="filter" :onClickHandler="toggleDefaultProfiles" />
-    <SmallButton icon="trash" :onClickHandler="clearList" />
+    <SmallButton icon="filter" title="Toggle default profiles" :onClickHandler="toggleDefaultProfiles" />
+    <SmallButton icon="trash" title="Delete all requests" :onClickHandler="deleteRequests" />
   </div>
 </template>
 
 <script>
 import {
-  CLEAR_LIST,
+  DELETE_REQUESTS,
   TOGGLE_ENABLED_DEFAULT_PROFILE,
 } from '../../store/modules/requestsList';
 
@@ -24,8 +24,8 @@ export default {
     /**
      * Clear the list.
      */
-    clearList() {
-      this.$store.commit(CLEAR_LIST);
+    deleteRequests() {
+      this.$store.dispatch(DELETE_REQUESTS);
     },
 
     /**
