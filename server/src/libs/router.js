@@ -5,7 +5,7 @@ import path from 'path';
 import express from 'express';
 
 import sseServer from './sse';
-import api from './api';
+import api from '../api';
 import sendEvents from './sendEvents';
 
 
