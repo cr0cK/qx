@@ -121,9 +121,10 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
    * Restore the response from chunks and send events with data.
    * Events data will be sent via SSE.
    */
-  res.end = function end_(chunk) {        // eslint-disable-line no-param-reassign
-    if (chunk) {
-      chunks.push(chunk);
+  res.end = function end_(...endArgs) {        // eslint-disable-line no-param-reassign
+    const finalChunk = endArgs[0];
+    if (finalChunk) {
+      chunks.push(finalChunk);
     }
 
     // compute the duration of the request
@@ -159,10 +160,12 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
         // emit the request via the bus
         bus.emit('request', requestData);
 
-        oldEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
+        oldEnd.apply(res, endArgs);   // eslint-disable-line prefer-rest-params
       })
       .catch((err) => {
         log.error('Cant decode the response body.', err);
+
+        oldEnd.apply(res, endArgs);   // eslint-disable-line prefer-rest-params
       });
   };
 
