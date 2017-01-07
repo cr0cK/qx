@@ -84,9 +84,11 @@ function sseServer(req: Object, res: Object) {
 
   startTick(res);
 
+  const sendHandler = sendSSEEvent(res);
+
   // remove the listener to avoid to bind several times the same handler.
-  bus.removeListener('request', sendSSEEvent(res));
-  bus.on('request', sendSSEEvent(res));
+  bus.removeListener('request', sendHandler);
+  bus.on('request', sendHandler);
 
   // stop tick interval when the request is closed
   req.on('close', () => stopTick(tickInterval));
