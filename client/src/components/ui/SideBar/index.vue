@@ -46,13 +46,13 @@ export default {
   top: 0;
   right: 0;
   padding: 1em;
+  box-sizing: border-box;
   z-index: 100;
   width: 70%;
   height: 100%;
   transform: translate3d(110%, 0, 0);
   box-shadow: -2px 0px 20px 0px #999;
   overflow: auto;
-  opacity: 0.9;
 
   &.visible {
     transform: translate3d(0, 0, 0);

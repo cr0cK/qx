@@ -55,6 +55,8 @@ export default {
 pre {
   border: 1px solid silver;
   font-size: 0.8em;
+  margin: 0;
   padding: 0.5em;
+  box-sizing: border-box;
 }
 </style>
