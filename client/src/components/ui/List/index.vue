@@ -56,11 +56,15 @@ table {
 
   th {
     background: #f4f4f4;
+
+    &:first-child {
+      border-left: 5px solid #f4f4f4;
+    }
   }
 
   tr {
     &:hover {
-      background: #c1f8f5;
+      background: #D6DDE1;
       cursor: pointer;
     }
 

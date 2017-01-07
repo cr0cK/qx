@@ -22,7 +22,7 @@ export default {
 
 <style lang="less" scoped>
 nav {
-  background: #095f68;
+  background: #222D32;
   width: 75px;
 
   header {
