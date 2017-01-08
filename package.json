@@ -4,7 +4,9 @@
   "description": "Queries eXplorer",
   "main": "dist/server/index.js",
   "scripts": {
-    "build": "./bin/build",
+    "copy:static": "./bin/copy-static",
+    "build:sources": "./bin/build",
+    "build": "npm run build:sources && npm run copy:static",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +27,7 @@
   "bugs": {
     "url": "https://github.com/cr0cK/qx/issues"
   },
-  "homepage": "https://github.com/cr0cK/qx#readme"
+  "homepage": "https://github.com/cr0cK/qx#readme",
+  "dependencies": {
+  }
 }

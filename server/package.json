@@ -18,7 +18,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
-    "lodash": "^4.17.2"
+    "lodash": "^4.17.2",
+    "lowdb": "^0.14.0",
+    "node-uuid": "^1.4.7",
+    "randomcolor": "^0.4.4"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

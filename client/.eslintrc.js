@@ -7,7 +7,8 @@ module.exports = {
   extends: 'airbnb-base',
   // required to lint *.vue files
   plugins: [
-    'html'
+    'html',
+    'flowtype',
   ],
   // check if imports actually resolve
   'settings': {
@@ -20,6 +21,7 @@ module.exports = {
   // add your custom rules here
   'rules': {
     'object-shorthand': 0,
+    'arrow-body-style': 0,
     'func-names': 0,
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
@@ -27,6 +29,7 @@ module.exports = {
       'vue': 'never'
     }],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'flowtype/define-flow-type': 1
   }
 }
