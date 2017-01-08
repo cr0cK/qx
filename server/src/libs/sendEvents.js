@@ -67,7 +67,7 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     const responseHeaders = res.header()._headers;   // eslint-disable-line no-underscore-dangle
 
     decodeResponse(responseHeaders, chunks)
-      .then((responseBody) => {
+      .then((response) => {
         const requestData: RequestDataEvent = {
           uuid: uuid.v4(),
           date: String(new Date()),
@@ -79,9 +79,9 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
           },
           response: {
             headers: responseHeaders,   // eslint-disable-line no-underscore-dangle
-            body: responseBody,
+            body: response.body,
             statusCode: res.statusCode,
-            length: responseBody.length,
+            length: response.length,
           },
           profiles,
         };

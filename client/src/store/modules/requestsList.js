@@ -4,6 +4,7 @@
 
 import axios from 'axios';
 
+import { formatFileSize } from '../../helpers/format';
 import { error } from '../../helpers/log';
 
 
@@ -59,8 +60,8 @@ const getters = {
           request.request.method,
           request.response.statusCode,
           request.request.originalUrl,
-          request.request.duration,
-          request.response.length,
+          `${request.request.duration} ms`,
+          formatFileSize(request.response.length),
         ],
         profiles: request.profiles,
         latestProfile: request.profiles[request.profiles.length - 1],

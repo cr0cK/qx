@@ -53,4 +53,13 @@ pre {
   font-size: 12px;
   line-height: 1.3em;
 }
+
+li {
+  line-height: 1.3em;
+}
+
+a {
+  text-decoration: none;
+  color: #FF9208;
+}
 </style>

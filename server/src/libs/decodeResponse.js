@@ -44,12 +44,18 @@ const encodeToJSON = (responseHeaders, string) => {
   const isJSON = /application\/json/.test(responseHeaders['content-type']);
 
   if (!isJSON) {
-    return Promise.resolve(string);
+    return Promise.resolve({
+      body: string,
+      length: string.length,
+    });
   }
 
   return new Promise((resolve, reject) => {
     try {
-      resolve(JSON.parse(string));
+      resolve({
+        body: JSON.parse(string),
+        length: string.length,
+      });
     } catch (err) {
       reject(err);
     }
@@ -67,5 +73,5 @@ export default (responseHeaders: Object, chunks: Array<Buffer>) => (
   concatBuffers(chunks)
     .then(allBuffers => unzip(responseHeaders, allBuffers))
     .then(unzippedBuffer => decodeToString(unzippedBuffer))
-    .then(responseBody => encodeToJSON(responseHeaders, responseBody))
+    .then(string => encodeToJSON(responseHeaders, string))
 );

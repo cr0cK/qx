@@ -17,6 +17,7 @@
 
 import List from '../ui/List';
 import SideBar from '../ui/SideBar';
+
 import RequestDetails from './RequestDetails';
 import error from '../../helpers/log';
 
@@ -105,6 +106,7 @@ export default {
 
         return {
           ...request,
+
           style: {
             'border-left': `5px solid ${color}`,
           },
