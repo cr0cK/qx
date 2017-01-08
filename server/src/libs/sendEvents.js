@@ -1,79 +1,11 @@
 // @flow
 
 import uuid from 'node-uuid';
-import zlib from 'zlib';
 
+import decodeResponse from './decodeResponse';
 import bus from './bus';
 import log from './logger';
 
-
-/**
- * Decode the response.
- *  - concat buffers
- *  - unzip if the content is zipped
- *  - decode to string
- *  - encode to JSON if the content-type is JSON
- */
-const decodeResponse = (responseHeaders, chunks) => {
-  const concatBuffers = localChunks => (
-    new Promise((resolve, reject) => {
-      try {
-        const allBuffers = Buffer.concat(localChunks);
-        resolve(allBuffers);
-      } catch (err) {
-        reject(err);
-      }
-    })
-  );
-
-  const unzip = (buffer) => {
-    const isGzipEncoded = responseHeaders['content-encoding'] === 'gzip';
-
-    if (!isGzipEncoded) {
-      return Promise.resolve(buffer);
-    }
-
-    return new Promise((resolve, reject) => {
-      zlib.unzip(buffer, (err, decodedBuffer) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(decodedBuffer);
-      });
-    });
-  };
-
-  const decodeToString = buffer => (
-    new Promise((resolve, reject) => {
-      try {
-        resolve(buffer.toString('utf8'));
-      } catch (err) {
-        reject(err);
-      }
-    })
-  );
-
-  const encodeToJSON = (string) => {
-    const isJSON = /application\/json/.test(responseHeaders['content-type']);
-
-    if (!isJSON) {
-      return Promise.resolve(string);
-    }
-
-    return new Promise((resolve, reject) => {
-      try {
-        resolve(JSON.parse(string));
-      } catch (err) {
-        reject(err);
-      }
-    });
-  };
-
-  return concatBuffers(chunks)
-    .then(unzip)
-    .then(decodeToString)
-    .then(encodeToJSON);
-};
 
 /**
  * Return the list of profiles that matches for the request object.
@@ -107,24 +39,26 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     return;
   }
 
-  const oldWrite = res.write;
-  const oldEnd = res.end;
+  const originalWrite = res.write;
+  const originalEnd = res.end;
 
   const chunks = [];
 
   res.write = function write_(chunk) {    // eslint-disable-line no-param-reassign
     chunks.push(chunk);
-    oldWrite.apply(res, arguments);       // eslint-disable-line prefer-rest-params
+    originalWrite.apply(res, arguments);       // eslint-disable-line prefer-rest-params
   };
 
   /**
    * Restore the response from chunks and send events with data.
    * Events data will be sent via SSE.
    */
-  res.end = function end_(...endArgs) {        // eslint-disable-line no-param-reassign
-    const finalChunk = endArgs[0];
-    if (finalChunk) {
-      chunks.push(finalChunk);
+  res.end = function end_(chunk) {        // eslint-disable-line no-param-reassign
+    // send now the response, decode and send the response after
+    originalEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
+
+    if (chunk) {
+      chunks.push(chunk);
     }
 
     // compute the duration of the request
@@ -159,13 +93,9 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
 
         // emit the request via the bus
         bus.emit('request', requestData);
-
-        oldEnd.apply(res, endArgs);   // eslint-disable-line prefer-rest-params
       })
       .catch((err) => {
         log.error('Cant decode the response body.', err);
-
-        oldEnd.apply(res, endArgs);   // eslint-disable-line prefer-rest-params
       });
   };
 
