@@ -11,16 +11,18 @@ import log from './logger';
  * Return the list of profiles that matches for the request object.
  */
 export const selectProfiles =
-(configProfiles: Array<ProfileDefinition>, req: Object): Array<ProfileDefinition> => {
-  let profiles: Array<ProfileDefinition> = [];
+(config: Config, req: Object): Array<ProfileDefinition> => {
+  const configProfiles: Array<ProfileDefinition> = config.profiles;
+  const interceptAllUrls = !!config.interceptAllUrls;
 
   // found profiles matching the request
-  profiles = configProfiles.reduce((acc, profil) => (
+  const profiles = configProfiles.reduce((acc, profil) => (
     profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
   ), []);
 
-  // if no profiles match, intercept all requests in the default profil
-  if (!profiles.length) {
+  // if interceptAllUrls and if no profiles match,
+  // intercept all requests in the default profil
+  if (interceptAllUrls && !profiles.length) {
     profiles.push({ name: 'default' });
   }
 
@@ -31,7 +33,7 @@ export const selectProfiles =
  * Hijack response writes to emit an event with the body of the response.
  */
 export default (db: DB, config: Config) => (req: Object, res: Object, next: Function): void => {
-  const profiles = selectProfiles(config.profiles, req);
+  const profiles = selectProfiles(config, req);
 
   // if no profiles found, don't intercept the request
   if (!profiles.length) {

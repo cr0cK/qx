@@ -12,6 +12,7 @@ const defaultConfig: Config = {
     name: 'default',
     color: 'white',
   }],
+  interceptAllUrls: true,
   // QX db to store queries
   dbFilePath: path.join(process.cwd(), 'qx_db.json'),
 };

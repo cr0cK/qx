@@ -15,6 +15,8 @@ type Config = {
   development: boolean,
   liveBundlePath: string,
   profiles: Array<ProfileDefinition>,
+  interceptAllUrls: boolean,
+  dbFilePath: string,
 };
 
 // Events
