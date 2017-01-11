@@ -16,7 +16,7 @@ export default {
   name: 'FileSize',
 
   props: {
-    value: String,
+    value: [String, Number],
   },
 
   methods: {
