@@ -27,6 +27,8 @@ type RequestDataEvent = {
   request: {
     headers: Object,
     method: string,
+    params: Object,
+    queryParams: Object,
     originalUrl: string,
     duration: number,
   },

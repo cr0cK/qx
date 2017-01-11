@@ -9,6 +9,16 @@
       </ul>
     </div>
 
+    <div class="post-params">
+      <h4>POST params</h4>
+      <pre>{{ getInfo('request.params') }}</pre>
+    </div>
+
+    <div class="query-params">
+      <h4>Query params</h4>
+      <pre>{{ getInfo('request.queryParams') }}</pre>
+    </div>
+
     <div class="header">
       <h4>Request headers</h4>
       <pre>{{ getInfo('request.headers') }}</pre>

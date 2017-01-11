@@ -76,6 +76,8 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
           request: {
             headers: req.headers,
             method: req.method,
+            params: req.body,
+            queryParams: req.query,
             originalUrl: req.originalUrl,
             duration: requestDuration,
           },
