@@ -99,7 +99,7 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
         bus.emit('request', requestData);
       })
       .catch((err) => {
-        log.error('Cant decode the response body.', err);
+        log('Cant decode the response body.', err.stack);
       });
   };
 
