@@ -20,10 +20,11 @@ const unzip = (responseHeaders, buffer) => {
     return Promise.resolve(buffer);
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     zlib.unzip(buffer, (err, decodedBuffer) => {
       if (err) {
-        reject(err);
+        // assuming that the response was not gzipped, return the original buffer
+        resolve(buffer);
       }
       resolve(decodedBuffer);
     });
