@@ -13,12 +13,13 @@
 
     <div class="post-params">
       <h4>Request summary</h4>
-      <li>
-        Status Code: <StatusCode :value="getInfo('response.statusCode')" />
-      </li>
-      <li>
-        Length: <FileSize :value="getInfo('response.length')" />
-      </li>
+      <ul>
+        <li>Status Code: <StatusCode :value="getInfo('response.statusCode')" /></li>
+        <li>Method: {{ getInfo('request.method') }}</li>
+        <li>Original url: {{ getInfo('request.originalUrl') }}</li>
+        <li>Response length: <FileSize :value="getInfo('response.length')" /></li>
+        <li>Request duration: {{ getInfo('request.duration') }} ms</li>
+      </ul>
     </div>
 
     <div class="post-params">
@@ -101,6 +102,15 @@ export default {
 </script>
 
 <style lang="less">
+ul {
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin-left: 1em;
+  }
+}
+
 pre {
   border: 1px solid silver;
   margin: 0;
