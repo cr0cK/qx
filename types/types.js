@@ -21,6 +21,11 @@ type Config = {
 
 // Events
 
+type DecodedResponse = {
+  body: string,
+  length: number,
+};
+
 type RequestDataEvent = {
   uuid: string,
   date: string,
@@ -34,11 +39,10 @@ type RequestDataEvent = {
   },
   response: {
     headers: Object,
-    body: string,
     statusCode: string,
-    length: number,
-  },
+  } & DecodedResponse,
   profiles: Array<ProfileDefinition>,
+  error?: string,
 };
 
 // UI

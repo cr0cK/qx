@@ -13,7 +13,7 @@ export default {
 <style lang="less">
 .center {
   position: relative;
-  padding: 1em;
+  padding: 20px;
   width: 100%;
   overflow-y: auto;
 }

@@ -68,38 +68,50 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
 
     const responseHeaders = res.header()._headers;   // eslint-disable-line no-underscore-dangle
 
+    const requestData: RequestDataEvent = {
+      uuid: uuid.v4(),
+      date: String(new Date()),
+      request: {
+        headers: req.headers,
+        method: req.method,
+        params: req.body,
+        queryParams: req.query,
+        originalUrl: req.originalUrl,
+        duration: requestDuration,
+      },
+      response: {
+        headers: responseHeaders,   // eslint-disable-line no-underscore-dangle
+        body: '',
+        statusCode: res.statusCode,
+        length: 0,
+      },
+      profiles,
+    };
+
+    // save the request and emit it via the bus
+    const processResponseData = (decodedResponse: DecodedResponse) => {
+      requestData.response = {
+        ...requestData.response,
+        ...decodedResponse,
+      };
+
+      db.get('requests')
+        .push(requestData)
+        .value();
+
+      bus.emit('request', requestData);
+    };
+
+    // once response is decoded, process it
     decodeResponse(responseHeaders, chunks)
-      .then((response) => {
-        const requestData: RequestDataEvent = {
-          uuid: uuid.v4(),
-          date: String(new Date()),
-          request: {
-            headers: req.headers,
-            method: req.method,
-            params: req.body,
-            queryParams: req.query,
-            originalUrl: req.originalUrl,
-            duration: requestDuration,
-          },
-          response: {
-            headers: responseHeaders,   // eslint-disable-line no-underscore-dangle
-            body: response.body,
-            statusCode: res.statusCode,
-            length: response.length,
-          },
-          profiles,
-        };
-
-        // save request in the db
-        db.get('requests')
-          .push(requestData)
-          .value();
-
-        // emit the request via the bus
-        bus.emit('request', requestData);
-      })
+      .then(decodedResponse => processResponseData(decodedResponse))
       .catch((err) => {
         log('Cant decode the response body.', err.stack);
+        processResponseData({
+          error: `Cant decode the response body: ${String(err)}`,
+          body: 'N/A',
+          length: 0,
+        });
       });
   };
 

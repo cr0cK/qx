@@ -1,16 +1,28 @@
 <template>
   <div>
     <div class="summary">
+      <h4>QX meta</h4>
       <ul>
-        <li>uuid: {{ getInfo('uuid') }}</li>
+        <li>UUID: {{ getInfo('uuid') }}</li>
         <li>Date: {{ getInfo('date') }}</li>
-        <li>Status Code: <StatusCode :value="getInfo('response.statusCode')"></StatusCode></li>
-        <li>Length: <FileSize :value="getInfo('response.length')"></FileSize></li>
+        <li v-if="getInfo('response.error')">
+          Error: <ErrorMessage :message="getInfo('response.error')" />
+        </li>
       </ul>
     </div>
 
     <div class="post-params">
-      <h4>POST params</h4>
+      <h4>Request summary</h4>
+      <li>
+        Status Code: <StatusCode :value="getInfo('response.statusCode')" />
+      </li>
+      <li>
+        Length: <FileSize :value="getInfo('response.length')" />
+      </li>
+    </div>
+
+    <div class="post-params">
+      <h4>Body params</h4>
       <pre>{{ getInfo('request.params') }}</pre>
     </div>
 
@@ -41,6 +53,7 @@ import get from 'lodash/get';
 
 import FileSize from '../ui/Display/FileSize';
 import StatusCode from '../ui/Display/StatusCode';
+import ErrorMessage from '../ui/Display/ErrorMessage';
 import { formatFileSize } from '../../helpers/format';
 
 import {
@@ -53,6 +66,7 @@ export default {
   components: {
     FileSize,
     StatusCode,
+    ErrorMessage,
   },
 
   props: {

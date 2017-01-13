@@ -69,7 +69,7 @@ const encodeToJSON = (responseHeaders, string) => {
  *  - decode to string
  *  - encode to JSON if the content-type is JSON
  */
-export default (responseHeaders: Object, chunks: Array<Buffer>) => (
+export default (responseHeaders: Object, chunks: Array<Buffer>): Promise<DecodedResponse> => (
   concatBuffers(chunks)
     .then(allBuffers => unzip(responseHeaders, allBuffers))
     .then(unzippedBuffer => decodeToString(unzippedBuffer))
