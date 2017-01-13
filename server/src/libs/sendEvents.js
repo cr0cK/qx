@@ -59,9 +59,9 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
     // send now the response, decode and send the response after
     originalEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
 
-    if (chunk) {
-      chunks.push(chunk);
-    }
+    // if (chunk) {
+    //   chunks.push(chunk);
+    // }
 
     // compute the duration of the request
     const requestDuration = (Date.now() - req.qxStart) / 1000;
