@@ -15,6 +15,8 @@
 /* globals EventSource: true */
 /* globals window: true */
 
+import get from 'lodash/get';
+
 import List from '../ui/List';
 import SideBar from '../ui/SideBar';
 
@@ -102,7 +104,7 @@ export default {
       const formattedRequests: Array<RequestRow> = this.$store.getters.formattedRequests;
 
       const rows = formattedRequests.reverse().map((request) => {
-        const color = request.latestProfile.color || 'white';
+        const color = get(request, 'profile.color', 'white');
 
         return {
           ...request,

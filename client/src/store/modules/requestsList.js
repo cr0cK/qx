@@ -40,18 +40,7 @@ const getters = {
   rawRequests: (state: State): Array<RequestDataEvent> => state.requests,
 
   formattedRequests: (state: State): Array<RequestRow> => {   // eslint-disable-line no-shadow
-    const enabledProfiles = state.profiles
-      .filter(profile => profile.enabled)
-      .map(profile => profile.name);
-
     return state.requests.reduce((acc, request, i) => {
-      const latestProfile = request.profiles[request.profiles.length - 1];
-
-      // do not add request if its last profile is disabled
-      if (enabledProfiles.indexOf(latestProfile.name) === -1) {
-        return acc;
-      }
-
       acc.push({
         uuid: request.uuid,
         date: request.date,
@@ -63,8 +52,7 @@ const getters = {
           `${request.request.duration} ms`,
           formatFileSize(request.response.length),
         ],
-        profiles: request.profiles,
-        latestProfile: request.profiles[request.profiles.length - 1],
+        profile: request.profile,
       });
       return acc;
     }, []);

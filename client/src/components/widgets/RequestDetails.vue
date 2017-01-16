@@ -5,6 +5,7 @@
       <ul>
         <li>UUID: {{ getInfo('uuid') }}</li>
         <li>Date: {{ getInfo('date') }}</li>
+        <li>Profile: {{ getInfo('profile.name') }}</li>
         <li v-if="getInfo('response.error')">
           Error: <ErrorMessage :message="getInfo('response.error')" />
         </li>

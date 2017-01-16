@@ -8,35 +8,37 @@ import log from './logger';
 
 
 /**
- * Return the list of profiles that matches for the request object.
+ * Return the last profile that matches for the current request.
  */
-export const selectProfiles =
-(config: Config, req: Object): Array<ProfileDefinition> => {
+export const selectProfile =
+(config: Config, req: Object): ProfileDefinition => {
   const configProfiles: Array<ProfileDefinition> = config.profiles;
   const interceptAllUrls = !!config.interceptAllUrls;
 
-  // found profiles matching the request
-  const profiles = configProfiles.reduce((acc, profil) => (
-    profil.urlsFilter && profil.urlsFilter(req) ? [...acc, profil] : acc
-  ), []);
+  // filter profiles that match the request
+  const profiles = configProfiles.filter(profil => (
+    profil.urlsFilter && profil.urlsFilter(req)
+  ));
 
-  // if interceptAllUrls and if no profiles match,
-  // intercept all requests in the default profil
-  if (interceptAllUrls && !profiles.length) {
-    profiles.push({ name: 'default' });
+  // if no profile found but if interceptAllUrls, push a default profile
+  if (!profiles.length && interceptAllUrls) {
+    profiles.push({
+      name: 'default',
+      color: 'white',
+    });
   }
 
-  return profiles;
+  return profiles.pop();
 };
 
 /**
  * Hijack response writes to emit an event with the body of the response.
  */
 export default (db: DB, config: Config) => (req: Object, res: Object, next: Function): void => {
-  const profiles = selectProfiles(config, req);
+  const profile = selectProfile(config, req);
 
-  // if no profiles found, don't intercept the request
-  if (!profiles.length) {
+  // if no profile found, don't intercept the request
+  if (!profile) {
     next();
     return;
   }
@@ -85,7 +87,7 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
         statusCode: res.statusCode,
         length: 0,
       },
-      profiles,
+      profile,
     };
 
     // save the request and emit it via the bus

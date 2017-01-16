@@ -41,7 +41,7 @@ type RequestDataEvent = {
     headers: Object,
     statusCode: string,
   } & DecodedResponse,
-  profiles: Array<ProfileDefinition>,
+  profile: ProfileDefinition,
   error?: string,
 };
 
@@ -51,7 +51,6 @@ type RequestRow = {
   uuid: string,
   date: string,
   values: Array<string | number>,
-  profiles: Array<ProfileDefinition>,
-  latestProfile: ProfileDefinition,
+  profile: ProfileDefinition,
   style?: Object,
 }
