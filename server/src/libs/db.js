@@ -5,6 +5,9 @@ export default (dbFilePath) => {
 
   const defaults: DBDefaults = {
     requests: [],
+    filters: {
+      query: '',
+    },
   };
 
   db.defaults(defaults)

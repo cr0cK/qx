@@ -60,7 +60,7 @@ import { formatFileSize } from '../../helpers/format';
 
 import {
   GET_REQUEST_DETAILS,
-} from '../../store/modules/requestsList';
+} from '../../store/modules/requests';
 
 export default {
   name: 'RequestDetails',

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <RequestsListFilters />
+
     <List
       :values="formatRequests"
       :onClickOnRow="selectRequest"
@@ -21,16 +23,17 @@ import List from '../ui/List';
 import SideBar from '../ui/SideBar';
 
 import RequestDetails from './RequestDetails';
+import RequestsListFilters from './RequestsListFilters';
 import error from '../../helpers/log';
 
 import {
-  GET_SAVED_REQUESTS,
+  GET_REQUESTS,
   SAVE_REQUESTS,
   SELECT_REQUEST,
   UNSELECT_REQUEST,
 
   GET_PROFILES,
-} from '../../store/modules/requestsList';
+} from '../../store/modules/requests';
 
 const evtSource = new EventSource('/qx/sse');
 
@@ -41,6 +44,7 @@ export default {
     List,
     SideBar,
     RequestDetails,
+    RequestsListFilters,
   },
 
   data() {
@@ -62,7 +66,7 @@ export default {
   },
 
   created() {
-    if (!this.$store.getters.getProfiles.length) {
+    if (!this.$store.getters.profiles.length) {
       this.$store.dispatch(GET_PROFILES);
     }
   },
@@ -75,7 +79,7 @@ export default {
     evtSource.addEventListener('request', this.pushRequest);
 
     if (!this.$store.getters.rawRequests.length) {
-      this.$store.dispatch(GET_SAVED_REQUESTS);
+      this.$store.dispatch(GET_REQUESTS);
     }
   },
 

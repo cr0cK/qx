@@ -1,0 +1,13 @@
+- "2 min ago"
+- Verifier que ce sont bien les X *derniers* qui remontent dans la liste au chargement
+- Remplacer # par le 1ere partie de l'uuid
+- Mettre la date au format de la date du browser
+- Tenter de reactiver la connexion SSE dès qu'elle a coupé
+
+
+
+
+Search string
+
+
+status=200 AND (method=POST OR method=GET)

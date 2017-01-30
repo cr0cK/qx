@@ -1,5 +1,8 @@
+// @flow
+
 export type VueXAction = ({
-  commit: Function
+  dispatch: Function,
+  commit: Function,
 }, payload: any) => Promise<any> | void;
 
 export type VueXMutation = (state: Object, payload: any) => void;

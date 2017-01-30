@@ -45,4 +45,4 @@ const filterQueries = (queryString) => {
     .value();
 };
 
-console.log(filterQueries(q));
+// console.log(filterQueries(q));

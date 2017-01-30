@@ -8,7 +8,6 @@ type ProfileDefinition = {
   name: string,
   color?: string,
   urlsFilter?: (url: Object) => boolean,
-  enabled?: boolean,
 };
 
 type Config = {

@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar">
-    <SmallButton icon="filter" title="Toggle default profiles" :onClickHandler="toggleDefaultProfiles" />
+    <!-- <SmallButton icon="filter" title="Toggle default profiles" :onClickHandler="toggleDefaultProfiles" /> -->
     <SmallButton icon="trash" title="Delete all requests" :onClickHandler="deleteRequests" />
   </div>
 </template>
@@ -9,7 +9,7 @@
 import {
   DELETE_REQUESTS,
   TOGGLE_ENABLED_DEFAULT_PROFILE,
-} from '../../store/modules/requestsList';
+} from '../../store/modules/requests';
 
 import SmallButton from '../ui/Button/SmallButton';
 

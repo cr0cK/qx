@@ -22,6 +22,7 @@ export default {
 
 <style lang="less" scoped>
 nav {
+  font-family: "Omnes", sans-serif;
   background: #222D32;
   width: 75px;
 

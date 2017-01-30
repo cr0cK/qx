@@ -36,9 +36,16 @@ export const selectProfile =
  */
 export default (db: DB, config: Config) => (req: Object, res: Object, next: Function): void => {
   const profile = selectProfile(config, req);
+  const isQxQuery = /^\/qx/.test(req.originalUrl);
 
-  // if no profile found, don't intercept the request
-  if (!profile) {
+  // don't intercept if
+  const dontIntercept =
+    // no profiles have been found
+    !profile ||
+    // it's a QX query
+    isQxQuery;
+
+  if (dontIntercept) {
     next();
     return;
   }
@@ -57,7 +64,7 @@ export default (db: DB, config: Config) => (req: Object, res: Object, next: Func
    * Restore the response from chunks and send events with data.
    * Events data will be sent via SSE.
    */
-  res.end = function end_(chunk) {        // eslint-disable-line no-param-reassign
+  res.end = function end_(/* chunk */) {        // eslint-disable-line no-param-reassign
     // send now the response, decode and send the response after
     originalEnd.apply(res, arguments);   // eslint-disable-line prefer-rest-params
 

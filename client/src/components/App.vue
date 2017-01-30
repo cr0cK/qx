@@ -36,11 +36,14 @@ export default {
 
 html,
 body {
-  font-family: "Omnes", sans-serif;
   font-weight: 300;
   font-size: 16px;
   height: 100%;
   overflow: hidden;
+}
+
+h1, h2, h3 {
+  font-family: "Omnes", sans-serif;
 }
 
 main.page {
@@ -62,4 +65,13 @@ a {
   text-decoration: none;
   color: #FF9208;
 }
+
+/** Forms **/
+
+select, input {
+  padding: 5px;
+  background: white;
+  border: 1px solid silver;
+}
+
 </style>

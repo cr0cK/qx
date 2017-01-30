@@ -5,19 +5,27 @@
 import axios from 'axios';
 
 import { formatFileSize } from '../../helpers/format';
-import { error } from '../../helpers/log';
+
+import { PUSH_NOTIFICATION } from './notifications';
 
 
-export const GET_SAVED_REQUESTS = 'requestsList/GET_SAVED_REQUESTS';
+// Getting requests
+export const GET_REQUESTS = 'requestsList/GET_REQUESTS';
+// Fetching the request details
 export const GET_REQUEST_DETAILS = 'requestsList/GET_REQUEST_DETAILS';
-export const SAVE_REQUESTS = 'requestsList/SAVE_REQUESTS';
+// When fetching requests, save them in the store
+export const SET_REQUESTS = 'requestsList/SET_REQUESTS';
+// When selecting a request (opening the sidebar)
 export const SELECT_REQUEST = 'requestsList/SELECT_REQUEST';
+// When unselected a request (closing the sidebar)
 export const UNSELECT_REQUEST = 'requestsList/UNSELECT_REQUEST';
+// When all requests are deleted
 export const DELETE_REQUESTS = 'requestsList/DELETE_REQUESTS';
-
+// Fetching profiles
 export const GET_PROFILES = 'requestsList/GET_PROFILES';
-export const TOGGLE_ENABLED_DEFAULT_PROFILE =
-  'requestsList/TOGGLE_ENABLED_DEFAULT_PROFILE';
+
+// export const TOGGLE_ENABLED_DEFAULT_PROFILE =
+//   'requestsList/TOGGLE_ENABLED_DEFAULT_PROFILE';
 
 
 type State = {
@@ -34,8 +42,12 @@ const initialState: State = {
   profiles: [],
 };
 
+/**
+ * GETTERS
+ */
+
 const getters = {
-  getProfiles: (state: State) => state.profiles,
+  profiles: (state: State) => state.profiles,
 
   rawRequests: (state: State): Array<RequestDataEvent> => state.requests,
 
@@ -63,6 +75,10 @@ const getters = {
   requestDetails: (state: State) => state.requestDetails,
 };
 
+/**
+ * ACTIONS
+ */
+
 const actions: VueXActions = {
   /**
    * Retrieve the profiles from the config and set them in the store.
@@ -70,16 +86,20 @@ const actions: VueXActions = {
   [GET_PROFILES]({ commit }) {
     axios.get('/qx/api/config')
       .then(response => commit('SET_PROFILES', response.data.profiles))
-      .catch(error);
+      .catch(error => commit(PUSH_NOTIFICATION, {
+        message: error,
+      }));
   },
 
   /**
    * Retrieve all requests and set them in the store.
    */
-  [GET_SAVED_REQUESTS]({ commit }) {
+  [GET_REQUESTS]({ commit }) {
     axios.get('/qx/api/requests')
-      .then(response => commit(SAVE_REQUESTS, response.data))
-      .catch(error);
+      .then(response => commit(SET_REQUESTS, response.data))
+      .catch(error => commit(PUSH_NOTIFICATION, {
+        message: error,
+      }));
   },
 
   /**
@@ -88,28 +108,33 @@ const actions: VueXActions = {
   [DELETE_REQUESTS]({ commit }) {
     axios.delete('/qx/api/requests')
       .then(() => commit(DELETE_REQUESTS))
-      .catch(error);
+      .catch(error => commit(PUSH_NOTIFICATION, {
+        message: error,
+      }));
   },
 
   /**
    * Get the details of a request.
    */
-  [GET_REQUEST_DETAILS]({ commit }, requestUuid) {
+  [GET_REQUEST_DETAILS]({ commit }, requestUuid: string) {
     axios.get(`/qx/api/requests/${requestUuid}`)
       .then(response => commit('SET_REQUEST_DETAILS', response.data))
-      .catch(error);
+      .catch(error => commit(PUSH_NOTIFICATION, {
+        message: error,
+      }));
   },
 };
 
+/**
+ * MUTATIONS
+ */
+
 const mutations: VueXMutations = {
-  [SAVE_REQUESTS](
+  [SET_REQUESTS](
     state: State,
     requestsData: Array<RequestDataEvent>,
   ) {
-    state.requests = [
-      ...state.requests,
-      ...requestsData,
-    ];
+    state.requests = requestsData;
   },
 
   [SELECT_REQUEST](
@@ -140,14 +165,16 @@ const mutations: VueXMutations = {
     }));
   },
 
-  [TOGGLE_ENABLED_DEFAULT_PROFILE](state: State) {
-    state.profiles.map((profile) => {
-      if (profile.name === 'default') {
-        profile.enabled = !profile.enabled;
-      }
-      return profile;
-    });
-  },
+  // [TOGGLE_ENABLED_DEFAULT_PROFILE](/* state: State */) {
+  //   return state;
+
+  //   state.profiles.map((profile) => {
+  //     if (profile.name === 'default') {
+  //       profile.enabled = !profile.enabled;
+  //     }
+  //     return profile;
+  //   });
+  // },
 };
 
 export default {
