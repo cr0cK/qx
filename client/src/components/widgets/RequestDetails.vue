@@ -3,9 +3,9 @@
     <div class="summary">
       <h4>QX meta</h4>
       <ul>
-        <li>UUID: {{ getInfo('uuid') }}</li>
-        <li>Date: {{ getInfo('date') }}</li>
-        <li>Profile: {{ getInfo('profile.name') }}</li>
+        <li>uuid: {{ getInfo('uuid') }}</li>
+        <li>date: {{ getInfo('date') }}</li>
+        <li>profile.name: {{ getInfo('profile.name') }}</li>
         <li v-if="getInfo('response.error')">
           Error: <ErrorMessage :message="getInfo('response.error')" />
         </li>
@@ -15,11 +15,11 @@
     <div class="post-params">
       <h4>Request summary</h4>
       <ul>
-        <li>Status Code: <StatusCode :value="getInfo('response.statusCode')" /></li>
-        <li>Method: {{ getInfo('request.method') }}</li>
-        <li>Original url: {{ getInfo('request.originalUrl') }}</li>
-        <li>Response length: <FileSize :value="getInfo('response.length')" /></li>
-        <li>Request duration: {{ getInfo('request.duration') }} ms</li>
+        <li>response.statusCode: <StatusCode :value="getInfo('response.statusCode')" /></li>
+        <li>request.method: {{ getInfo('request.method') }}</li>
+        <li>request.originalUrl: {{ getInfo('request.originalUrl') }}</li>
+        <li>response.length: <FileSize :value="getInfo('response.length')" /></li>
+        <li>request.duration: {{ getInfo('request.duration') }} ms</li>
       </ul>
     </div>
 
