@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RequestsListFilters />
+    <FiltersQuery />
 
     <List
       :values="formatRequests"
@@ -23,12 +23,12 @@ import List from '../ui/List';
 import SideBar from '../ui/SideBar';
 
 import RequestDetails from './RequestDetails';
-import RequestsListFilters from './RequestsListFilters';
+import FiltersQuery from './FiltersQuery';
 import error from '../../helpers/log';
 
 import {
   GET_REQUESTS,
-  SAVE_REQUESTS,
+  PUSH_REQUEST,
   SELECT_REQUEST,
   UNSELECT_REQUEST,
 
@@ -44,7 +44,7 @@ export default {
     List,
     SideBar,
     RequestDetails,
-    RequestsListFilters,
+    FiltersQuery,
   },
 
   data() {
@@ -141,7 +141,7 @@ export default {
     pushRequest(event) {
       try {
         const requestData: RequestDataEvent = JSON.parse(event.data);
-        this.$store.commit(SAVE_REQUESTS, [requestData]);
+        this.$store.commit(PUSH_REQUEST, requestData);
       } catch (err) {
         error(String(err));
       }

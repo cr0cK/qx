@@ -35,7 +35,7 @@ const actions: VueXActions = {
    * Get th filter query save in the DB.
    */
   [GET_FILTERS_QUERY]({ commit }) {
-    axios.get('/qx/api/filters/query')
+    return axios.get('/qx/api/filters/query')
       .then(response => commit(SET_FILTERS_QUERY, response.data.query))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
@@ -47,7 +47,8 @@ const actions: VueXActions = {
    * and refresh the list.
    */
   [SET_FILTERS_QUERY]({ commit }, query: string) {
-    axios.post('/qx/api/filters/query', { query })
+    return axios.post('/qx/api/filters/query', { query })
+      .then(() => commit(SET_FILTERS_QUERY, query))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
       }));

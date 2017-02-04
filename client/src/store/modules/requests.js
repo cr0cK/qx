@@ -9,19 +9,13 @@ import { formatFileSize } from '../../helpers/format';
 import { PUSH_NOTIFICATION } from './notifications';
 
 
-// Getting requests
 export const GET_REQUESTS = 'requestsList/GET_REQUESTS';
-// Fetching the request details
 export const GET_REQUEST_DETAILS = 'requestsList/GET_REQUEST_DETAILS';
-// When fetching requests, save them in the store
+export const PUSH_REQUEST = 'requestsList/PUSH_REQUEST';
 export const SET_REQUESTS = 'requestsList/SET_REQUESTS';
-// When selecting a request (opening the sidebar)
 export const SELECT_REQUEST = 'requestsList/SELECT_REQUEST';
-// When unselected a request (closing the sidebar)
 export const UNSELECT_REQUEST = 'requestsList/UNSELECT_REQUEST';
-// When all requests are deleted
 export const DELETE_REQUESTS = 'requestsList/DELETE_REQUESTS';
-// Fetching profiles
 export const GET_PROFILES = 'requestsList/GET_PROFILES';
 
 // export const TOGGLE_ENABLED_DEFAULT_PROFILE =
@@ -84,7 +78,7 @@ const actions: VueXActions = {
    * Retrieve the profiles from the config and set them in the store.
    */
   [GET_PROFILES]({ commit }) {
-    axios.get('/qx/api/config')
+    return axios.get('/qx/api/config')
       .then(response => commit('SET_PROFILES', response.data.profiles))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
@@ -94,8 +88,8 @@ const actions: VueXActions = {
   /**
    * Retrieve all requests and set them in the store.
    */
-  [GET_REQUESTS]({ commit }) {
-    axios.get('/qx/api/requests')
+  [GET_REQUESTS]({ commit, getters }) {   // eslint-disable-line no-shadow
+    return axios.get(`/qx/api/requests?query=${getters.filtersQuery}`)
       .then(response => commit(SET_REQUESTS, response.data))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
@@ -106,7 +100,7 @@ const actions: VueXActions = {
    * Delete all requests and clean the the store.
    */
   [DELETE_REQUESTS]({ commit }) {
-    axios.delete('/qx/api/requests')
+    return axios.delete('/qx/api/requests')
       .then(() => commit(DELETE_REQUESTS))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
@@ -117,7 +111,7 @@ const actions: VueXActions = {
    * Get the details of a request.
    */
   [GET_REQUEST_DETAILS]({ commit }, requestUuid: string) {
-    axios.get(`/qx/api/requests/${requestUuid}`)
+    return axios.get(`/qx/api/requests/${requestUuid}`)
       .then(response => commit('SET_REQUEST_DETAILS', response.data))
       .catch(error => commit(PUSH_NOTIFICATION, {
         message: error,
@@ -130,6 +124,17 @@ const actions: VueXActions = {
  */
 
 const mutations: VueXMutations = {
+  [PUSH_REQUEST](
+    state: State,
+    requestsData: RequestDataEvent,
+  ) {
+    // TODO Apply filter here
+    state.requests = [
+      ...state.requests,
+      requestsData,
+    ];
+  },
+
   [SET_REQUESTS](
     state: State,
     requestsData: Array<RequestDataEvent>,

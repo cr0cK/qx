@@ -3,6 +3,7 @@
 export type VueXAction = ({
   dispatch: Function,
   commit: Function,
+  getters: Object,
 }, payload: any) => Promise<any> | void;
 
 export type VueXMutation = (state: Object, payload: any) => void;

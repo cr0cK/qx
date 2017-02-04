@@ -6,12 +6,14 @@
       :value="savedQuery"
       @keyup.enter="submitHandler"
       @blur="submitHandler"
-      placeholder="query.statusCode === 200"
+      placeholder="request.statusCode === 200"
     />
   </div>
 </template>
 
 <script>
+import userPrefsMixin from '../../helpers/userPrefsMixin';
+
 import SmallButton from '../ui/Button/SmallButton';
 
 import {
@@ -25,6 +27,8 @@ import {
 
 export default {
   name: 'RequestsListFilters',
+
+  mixins: [userPrefsMixin],
 
   components: {
     SmallButton,
@@ -47,6 +51,8 @@ export default {
      * Save the query and get queries.
      */
     submitHandler(evt) {
+      this.setUserPrefs({ filtersQuery: evt.target.value });
+
       this.$store.dispatch(SET_FILTERS_QUERY, evt.target.value)
         .then(() => {
           this.$store.dispatch(GET_REQUESTS);

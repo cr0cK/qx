@@ -9,9 +9,23 @@ export default (db: DB) => {
    * Return the list of requests saved in the DB.
    */
   router.get('/', (req, res) => {
+    const { query } = req.query;
+
+    // eslint-disable-next-line no-unused-vars
+    const filter = (request) => {
+      try {
+        const expression = `request.${query}`;
+        return !!eval(expression);   // eslint-disable-line no-eval
+      } catch (err) {
+        console.log('Filter error', String(err));
+        return true;
+      }
+    };
+
     res.json(
       db.get('requests')
-        .take(50)   // 50 max for now
+        .filter(filter)
+        // .take(50)   // 50 max for now
         .value(),
       );
   });
