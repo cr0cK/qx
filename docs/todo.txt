@@ -5,9 +5,10 @@
 - Tenter de reactiver la connexion SSE dès qu'elle a coupé
 
 
+## Search string
 
-
-Search string
-
-
-status=200 AND (method=POST OR method=GET)
+- Query: status=200 AND (method=POST OR method=GET)
+- Sauvegardée dans le navigateur (cookie)
+- Quand je tape une string, au blur / entrée, filtre la liste
+- Au rechargement de la page, si query dans cookie, fill le input et filtre la liste
+- Autocomplete
